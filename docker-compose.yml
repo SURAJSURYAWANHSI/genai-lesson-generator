@@ -1,0 +1,43 @@
+# Usage:
+#   docker compose up --build                      SQLite in backend/data, same file as a local run
+#   docker compose --profile postgres up --build   also starts Postgres; see README for DATABASE_URL
+#
+# Settings and the Gemini key come from .env in this folder.
+# Data stays in this project folder, and ports are reachable only from this machine.
+
+services:
+  backend:
+    build: ./backend
+    env_file: .env
+    environment:
+      DATABASE_URL: ${COMPOSE_DATABASE_URL:-sqlite:////data/lessons.db}
+    volumes:
+      - ./backend/data:/data
+    ports:
+      - "127.0.0.1:8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request as u; u.urlopen('http://127.0.0.1:8000/api/v1/health')"]
+      interval: 10s
+      timeout: 5s
+      retries: 6
+      start_period: 15s
+
+  frontend:
+    build: ./frontend
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "127.0.0.1:8080:80"
+
+  postgres:
+    image: postgres:17-alpine
+    profiles: [postgres]
+    environment:
+      POSTGRES_USER: lessons
+      POSTGRES_PASSWORD: lessons
+      POSTGRES_DB: lessons
+    volumes:
+      - ./backend/data/postgres:/var/lib/postgresql/data
+    ports:
+      - "127.0.0.1:5432:5432"

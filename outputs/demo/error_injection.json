@@ -1,0 +1,62 @@
+{
+  "type": "missing_practical_example",
+  "label": "Missing practical retrieval example",
+  "expected_criteria": [
+    "Q07"
+  ],
+  "persistent": false,
+  "modifications": [
+    {
+      "attempt": 1,
+      "section": "practical_example",
+      "before": {
+        "scenario": "A company has a helper chatbot for its staff. An employee wants to know how many leave days they can carry into next year.",
+        "starting_input": "How many leave days can I carry into next year?",
+        "source_materials": [
+          {
+            "title": "Leave Policy",
+            "content": "Employees may carry a maximum of 5 unused leave days into the next calendar year."
+          },
+          {
+            "title": "Travel Policy",
+            "content": "Employees must book work travel at least 7 days before the trip."
+          },
+          {
+            "title": "Office Hours",
+            "content": "The office is open from 9 AM to 6 PM, Monday to Friday."
+          }
+        ],
+        "selected_materials": [
+          "Leave Policy"
+        ],
+        "intermediate_step": "Use only the information below to answer the question.\nInformation: Employees may carry a maximum of 5 unused leave days into the next calendar year.\nQuestion: How many leave days can I carry into next year?",
+        "final_result": "You can carry up to 5 unused leave days into next year. This comes from the Leave Policy."
+      },
+      "after": {
+        "scenario": "RAG can be used by companies to answer questions from their documents.",
+        "starting_input": "",
+        "source_materials": [],
+        "selected_materials": [],
+        "intermediate_step": "",
+        "final_result": ""
+      },
+      "description": "Replaced the worked example with a one-line mention and removed the walkthrough."
+    }
+  ],
+  "evaluator_results": [
+    {
+      "attempt": 1,
+      "lesson_had_injected_error": true,
+      "failed_criteria": [
+        "Q07"
+      ]
+    },
+    {
+      "attempt": 2,
+      "lesson_had_injected_error": false,
+      "failed_criteria": []
+    }
+  ],
+  "detected": true,
+  "corrected": true
+}

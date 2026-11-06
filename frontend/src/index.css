@@ -1,0 +1,188 @@
+@import "tailwindcss";
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-card: var(--card);
+  --color-card-foreground: var(--foreground);
+  --color-popover: var(--card);
+  --color-popover-foreground: var(--foreground);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-secondary: var(--muted);
+  --color-secondary-foreground: var(--foreground);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-accent: var(--muted);
+  --color-accent-foreground: var(--foreground);
+  --color-destructive: var(--fail);
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+  --color-pass: var(--pass);
+  --color-pass-soft: var(--pass-soft);
+  --color-fail: var(--fail);
+  --color-fail-soft: var(--fail-soft);
+  --color-fail-contrast: var(--fail-contrast);
+  --color-caution: var(--caution);
+  --color-caution-soft: var(--caution-soft);
+
+  --radius-sm: 3px;
+  --radius-md: 5px;
+  --radius-lg: 7px;
+
+  /* System fonts only, so nothing loads from a remote origin. The dashboard speaks in a humanist
+     sans; the lesson under review is set in a reading serif, so the artefact and the machine
+     judging it never look alike. */
+  --font-sans: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, system-ui, sans-serif;
+  --font-serif: Charter, "Iowan Old Style", "Palatino Linotype", Cambria, Georgia, serif;
+  --font-mono: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+:root {
+  color-scheme: light dark;
+  --background: #f1f3f8;
+  --foreground: #172036;
+  --card: #ffffff;
+  --muted: #e6e9f1;
+  --muted-foreground: #525c75;
+  --border: #d3d8e4;
+  --input: #8d96ad;
+  --primary: #2a3cb5;
+  --primary-foreground: #ffffff;
+  --ring: #2a3cb5;
+
+  --pass: #0a6b52;
+  --pass-soft: #dcf2ea;
+  --fail: #b01e3a;
+  --fail-soft: #fae3e7;
+  --fail-contrast: #ffffff;
+  --caution: #7c5100;
+  --caution-soft: #fbedcc;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #121829;
+    --foreground: #e7ebf5;
+    --card: #1a2238;
+    --muted: #242d47;
+    --muted-foreground: #a4afc6;
+    --border: #323c58;
+    --input: #5d6887;
+    --primary: #a3afff;
+    --primary-foreground: #121829;
+    --ring: #a3afff;
+
+    --pass: #62d6b3;
+    --pass-soft: #12352f;
+    --fail: #ff8d9f;
+    --fail-soft: #421b2a;
+    --fail-contrast: #2a0d15;
+    --caution: #f1c871;
+    --caution-soft: #3a2d10;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    overflow-wrap: anywhere;
+  }
+  :focus-visible {
+    outline: 2px solid var(--ring);
+    outline-offset: 2px;
+  }
+  summary {
+    cursor: pointer;
+  }
+}
+
+@layer components {
+  /* Markdown from the lesson. Nothing here applies to the dashboard around it. */
+  .prose-lesson {
+    font-family: var(--font-serif);
+    font-size: 1.0625rem;
+    line-height: 1.7;
+    max-width: 68ch;
+  }
+  .prose-lesson > * + * {
+    margin-top: 0.75em;
+  }
+  .prose-lesson ul {
+    list-style: disc;
+    padding-left: 1.4em;
+  }
+  .prose-lesson ol {
+    list-style: decimal;
+    padding-left: 1.4em;
+  }
+  .prose-lesson a {
+    color: var(--primary);
+    text-decoration: underline;
+  }
+  .prose-lesson code {
+    font-family: var(--font-mono);
+    font-size: 0.875em;
+    background: var(--muted);
+    border-radius: 3px;
+    padding: 0.1em 0.3em;
+  }
+  .prose-lesson pre {
+    overflow-x: auto;
+    background: var(--muted);
+    border-radius: 5px;
+    padding: 0.75em 1em;
+  }
+  .prose-lesson pre code {
+    background: none;
+    padding: 0;
+  }
+  .prose-lesson blockquote {
+    border-left: 3px solid var(--border);
+    padding-left: 1em;
+    color: var(--muted-foreground);
+  }
+  .prose-lesson h3,
+  .prose-lesson h4,
+  .prose-lesson h5 {
+    font-weight: 600;
+  }
+
+  /* Diagonal hazard edge: reserved for demo/test mode so it can't be confused with anything else. */
+  .demo-hazard {
+    background-image: repeating-linear-gradient(-45deg, var(--caution) 0 8px, transparent 8px 16px);
+  }
+
+  /* Disclosure marker shared by every expandable block. */
+  details > summary {
+    list-style: none;
+  }
+  details > summary::-webkit-details-marker {
+    display: none;
+  }
+  .disclosure-mark {
+    transition: transform 120ms ease;
+  }
+  details[open] > summary .disclosure-mark {
+    transform: rotate(90deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  ::before,
+  ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

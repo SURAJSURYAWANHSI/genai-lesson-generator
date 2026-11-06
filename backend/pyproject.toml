@@ -1,0 +1,10 @@
+[project]
+name = "lesson-generator-backend"
+version = "1.0.0"
+description = "Self-evaluating lesson generator: agentic content quality system"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["."]
+addopts = "-q"
