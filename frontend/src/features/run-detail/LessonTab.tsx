@@ -14,15 +14,17 @@ export function LessonTab({ run }: { run: RunDetail }) {
   }
 
   return (
-    <div className="max-w-[68ch] space-y-8">
+    <div className="space-y-3">
       {!run.final_lesson && (
-        <div className="rounded-lg bg-fail-soft px-5 py-4">
-          <p className="font-semibold text-fail">NOT PUBLISHED</p>
+        <div className="rounded-lg bg-fail-soft px-5 py-4 shadow-rest">
+          <p className="font-bold text-fail">NOT PUBLISHED</p>
           <p className="mt-1">This is the latest version. It did not pass the checks, so it should not be used for teaching.</p>
         </div>
       )}
-      <article>
-        <LessonSections lesson={lesson} topic={run.topic} />
+      <article className="panel">
+        <div className="mx-auto max-w-[68ch]">
+          <LessonSections lesson={lesson} topic={run.topic} />
+        </div>
       </article>
     </div>
   )

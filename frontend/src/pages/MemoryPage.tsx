@@ -1,6 +1,6 @@
 import { Link } from 'react-router-dom'
 import { Disclosure } from '@/components/Disclosure'
-import { PageHeader, SectionHeading } from '@/components/PageHeader'
+import { PageHeader, Panel } from '@/components/PageHeader'
 import { EmptyState, ErrorBlock, LoadingBlock } from '@/components/QueryState'
 import { Button } from '@/components/ui/button'
 import { plainText, pluralise, topicLabel } from '@/lib/format'
@@ -28,7 +28,7 @@ function RecordList({ records, showType = false }: { records: MemoryRecord[]; sh
           key={record.id}
           summary={
             <span className="flex flex-wrap items-baseline justify-between gap-x-4">
-              <span className="font-medium">
+              <span className="font-semibold">
                 {recordTitle(record)}
                 {showType && record.criterion_id && (
                   <span className="font-normal text-muted-foreground">, {TYPE_LABELS[record.memory_type]}</span>
@@ -59,22 +59,20 @@ function RecordGroup({
   showType?: boolean
 }) {
   return (
-    <section aria-labelledby={id} className="space-y-2">
-      <SectionHeading id={id}>{title}</SectionHeading>
+    <Panel id={id} title={title}>
       {records.length === 0 ? (
         <p className="text-muted-foreground">None yet.</p>
       ) : (
         <RecordList records={records} showType={showType} />
       )}
-    </section>
+    </Panel>
   )
 }
 
 function AllRecords() {
   const records = useMemoryRecords()
   return (
-    <section aria-labelledby="records-heading" className="space-y-2">
-      <SectionHeading id="records-heading">Memory records</SectionHeading>
+    <Panel id="records-heading" title="Memory records">
       {records.isPending && <LoadingBlock rows={2} label="Loading memory records" />}
       {records.isError && (
         <ErrorBlock error={records.error} title="Memory records couldn't be loaded" onRetry={() => void records.refetch()} />
@@ -84,7 +82,7 @@ function AllRecords() {
           <RecordList records={records.data} showType />
         </Disclosure>
       )}
-    </section>
+    </Panel>
   )
 }
 
@@ -94,8 +92,9 @@ export function MemoryPage() {
   const nothingYet = records.data?.length === 0
 
   return (
-    <div className="space-y-10">
+    <div className="mx-auto max-w-4xl">
       <PageHeader title="Memory">What the system has learned from earlier lessons, so it can do better next time.</PageHeader>
+      <div className="page-body space-y-5">
       {patterns.isPending && <LoadingBlock rows={6} label="Loading memory" />}
       {patterns.isError && (
         <ErrorBlock error={patterns.error} title="Memory couldn't be loaded" onRetry={() => void patterns.refetch()} />
@@ -124,6 +123,7 @@ export function MemoryPage() {
             <AllRecords />
           </>
         ))}
+      </div>
     </div>
   )
 }

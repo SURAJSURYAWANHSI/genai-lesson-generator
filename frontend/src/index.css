@@ -1,79 +1,83 @@
 @import "tailwindcss";
 
+/* The app has one theme, so dark: utilities always apply, whatever the system setting. */
+@custom-variant dark (&:where(html, html *));
+
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --color-card: var(--card);
-  --color-card-foreground: var(--foreground);
-  --color-popover: var(--card);
-  --color-popover-foreground: var(--foreground);
-  --color-primary: var(--primary);
-  --color-primary-foreground: var(--primary-foreground);
-  --color-secondary: var(--muted);
-  --color-secondary-foreground: var(--foreground);
-  --color-muted: var(--muted);
-  --color-muted-foreground: var(--muted-foreground);
-  --color-accent: var(--muted);
-  --color-accent-foreground: var(--foreground);
-  --color-destructive: var(--fail);
-  --color-border: var(--border);
-  --color-input: var(--input);
-  --color-ring: var(--ring);
+  --color-background: var(--midnight);
+  --color-foreground: var(--white);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--white);
+  --color-popover: var(--surface-raised);
+  --color-popover-foreground: var(--white);
+  --color-primary: var(--lime);
+  --color-primary-foreground: var(--midnight);
+  --color-primary-hover: var(--lime-hover);
+  --color-secondary: var(--surface-hover);
+  --color-secondary-foreground: var(--white);
+  --color-muted: var(--surface-hover);
+  --color-muted-foreground: var(--text-secondary);
+  --color-faint: var(--text-muted);
+  --color-subtle: var(--surface-raised);
+  --color-accent: var(--surface-hover);
+  --color-accent-foreground: var(--white);
+  --color-destructive: var(--red);
+  --color-border: var(--line);
+  --color-input: var(--line);
+  --color-ring: var(--lime);
 
-  --color-pass: var(--pass);
-  --color-fail: var(--fail);
-  --color-fail-soft: var(--fail-soft);
-  --color-caution: var(--caution);
-  --color-caution-soft: var(--caution-soft);
+  --color-lime-soft: var(--lime-soft);
+  --color-lime-border: var(--lime-border);
 
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
+  /* Status: lime means success, red means failure. Attention uses white on a raised surface. */
+  --color-pass: var(--lime);
+  --color-pass-soft: var(--lime-soft);
+  --color-fail: var(--red);
+  --color-fail-soft: var(--red-soft);
+  --color-caution: var(--white);
+  --color-caution-soft: var(--surface-raised);
 
-  /* One system font family, so nothing loads from a remote origin. */
-  --font-sans: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, system-ui, sans-serif;
+  /* Corners grow with hierarchy: controls, then blocks, then page panels. */
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+
+  --shadow-rest: var(--elevation-rest);
+  --shadow-raised: var(--elevation-raised);
+  --shadow-float: var(--elevation-float);
+
+  /* One family, bundled with the app, so nothing loads from a remote origin. */
+  --font-sans: "Figtree Variable", system-ui, sans-serif;
+  --font-display: "Figtree Variable", system-ui, sans-serif;
 }
 
 :root {
-  color-scheme: light dark;
-  --background: #fbfbfd;
-  --foreground: #1b2233;
-  --card: #ffffff;
-  --muted: #eef0f5;
-  --muted-foreground: #565f75;
-  --border: #e0e3eb;
-  --input: #a3aabc;
-  --primary: #2a3cb5;
-  --primary-foreground: #ffffff;
-  --ring: #2a3cb5;
+  color-scheme: dark;
 
-  /* Green and red are reserved for pass and fail. Amber only marks mock and demo mode. */
-  --pass: #0a6b52;
-  --fail: #b01e3a;
-  --fail-soft: #fbeaed;
-  --caution: #6b4600;
-  --caution-soft: #fbf0d6;
-}
+  --midnight: #0b0b0c;
+  --deep-black: #050506;
+  --surface: #111214;
+  --surface-raised: #181a1c;
+  --surface-hover: #202326;
+  --line: #292c2e;
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #141a2a;
-    --foreground: #e9ecf4;
-    --card: #1b2336;
-    --muted: #262f47;
-    --muted-foreground: #a7b1c7;
-    --border: #2f3952;
-    --input: #5d6887;
-    --primary: #a3afff;
-    --primary-foreground: #141a2a;
-    --ring: #a3afff;
+  --white: #ffffff;
+  --text-secondary: #b5b8ba;
+  --text-muted: #777c80;
 
-    --pass: #62d6b3;
-    --fail: #ff8d9f;
-    --fail-soft: #3a1b27;
-    --caution: #f1c871;
-    --caution-soft: #33290f;
-  }
+  --lime: #c6f432;
+  --lime-hover: #d7ff58;
+  --lime-soft: #c6f4321a;
+  --lime-border: #c6f43240;
+
+  /* Accessible red, kept for failures and destructive actions. */
+  --red: #ff6b6b;
+  --red-soft: #ff6b6b1f;
+
+  --elevation-rest: 0 1px 2px rgb(0 0 0 / 0.4);
+  --elevation-raised: 0 4px 16px rgb(0 0 0 / 0.35);
+  --elevation-float: 0 16px 40px rgb(0 0 0 / 0.6);
 }
 
 @layer base {
@@ -83,12 +87,24 @@
   html {
     -webkit-text-size-adjust: 100%;
   }
+  /* Scrollbars are hidden throughout. Scrolling by wheel, touch and keyboard still works. */
+  * {
+    scrollbar-width: none;
+  }
+  *::-webkit-scrollbar {
+    display: none;
+  }
   body {
     @apply bg-background text-foreground font-sans antialiased;
     overflow-wrap: anywhere;
   }
+  h1,
+  h2,
+  h3 {
+    letter-spacing: -0.015em;
+  }
   :focus-visible {
-    outline: 2px solid var(--ring);
+    outline: 2px solid var(--lime);
     outline-offset: 2px;
   }
   summary {
@@ -97,10 +113,140 @@
 }
 
 @layer components {
+  .page-band {
+    padding-top: clamp(2rem, 4vw, 3rem);
+  }
+  .page-title {
+    font-size: clamp(2rem, 1.5rem + 2.2vw, 2.75rem);
+    font-weight: 700;
+    line-height: 1.1;
+    text-wrap: balance;
+  }
+
+  /* Page entry: the hero rises in line by line, then the panels follow. */
+  .page-band > * {
+    animation: hero-in 520ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+  }
+  .page-band > :nth-child(2) {
+    animation-delay: 90ms;
+  }
+  .page-band > :nth-child(3) {
+    animation-delay: 180ms;
+  }
+  .page-body {
+    margin-top: 1.75rem;
+    animation: rise 420ms cubic-bezier(0.2, 0.75, 0.2, 1) 220ms both;
+  }
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-xl);
+    padding: clamp(1.25rem, 3vw, 2rem);
+  }
+  .tab-enter {
+    animation: fade-in 200ms ease both;
+  }
+  .bar-grow {
+    transform-origin: left;
+    animation: grow 700ms cubic-bezier(0.2, 0.75, 0.2, 1) both;
+  }
+
+  /* The prompt in a worked example. */
+  .prompt-block {
+    background: var(--deep-black);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-lg);
+    padding: 1rem 1.25rem;
+    white-space: pre-wrap;
+  }
+  .step-number {
+    display: grid;
+    place-items: center;
+    width: 1.75rem;
+    height: 1.75rem;
+    border-radius: 999px;
+    background: var(--surface-hover);
+    font-size: 0.875rem;
+    font-weight: 700;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Live workflow stepper. */
+  .step {
+    position: relative;
+    display: flex;
+    gap: 1rem;
+    padding-bottom: 1.75rem;
+  }
+  .step:last-child {
+    padding-bottom: 0;
+  }
+  .step:not(:last-child)::before {
+    content: "";
+    position: absolute;
+    left: 1.0625rem;
+    top: 2.5rem;
+    bottom: 0.25rem;
+    width: 2px;
+    border-radius: 2px;
+    background: var(--line);
+    transition: background-color 400ms ease;
+  }
+  .step[data-status="done"]:not(:last-child)::before {
+    background: var(--lime-border);
+  }
+  .step-marker {
+    display: grid;
+    flex: none;
+    place-items: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 999px;
+    background: var(--surface-hover);
+    color: var(--text-muted);
+    transition:
+      background-color 250ms ease,
+      color 250ms ease;
+  }
+  .step[data-status="done"] .step-marker {
+    background: var(--lime-soft);
+    color: var(--lime);
+  }
+  .step[data-status="running"] .step-marker {
+    background: var(--lime);
+    color: var(--midnight);
+    animation: pulse-ring 1.6s ease-out infinite;
+  }
+  .step[data-status="failed"] .step-marker {
+    background: var(--red);
+    color: var(--midnight);
+  }
+  /* Left to right where six columns fit. Narrower screens keep the vertical list. */
+  @media (min-width: 64rem) {
+    .steps {
+      display: grid;
+      grid-template-columns: repeat(6, minmax(0, 1fr));
+      column-gap: 1rem;
+    }
+    .step {
+      flex-direction: column;
+      gap: 0.75rem;
+      padding-bottom: 0;
+    }
+    .step:not(:last-child)::before {
+      top: 1.0625rem;
+      bottom: auto;
+      left: 2.75rem;
+      right: -0.5rem;
+      width: auto;
+      height: 2px;
+    }
+  }
+
   /* Markdown from the lesson. */
   .prose-lesson {
     font-size: 1.0625rem;
-    line-height: 1.75;
+    line-height: 1.7;
   }
   .prose-lesson > * + * {
     margin-top: 0.75em;
@@ -114,14 +260,14 @@
     padding-left: 1.4em;
   }
   .prose-lesson a {
-    color: var(--primary);
+    color: var(--lime);
     text-decoration: underline;
   }
   .prose-lesson code,
   .prose-lesson pre {
     font-family: inherit;
-    background: var(--muted);
-    border-radius: 4px;
+    background: var(--surface-hover);
+    border-radius: 6px;
     padding: 0.1em 0.3em;
   }
   .prose-lesson pre {
@@ -133,9 +279,9 @@
     padding: 0;
   }
   .prose-lesson blockquote {
-    border-left: 3px solid var(--border);
+    border-left: 3px solid var(--line);
     padding-left: 1em;
-    color: var(--muted-foreground);
+    color: var(--text-secondary);
   }
   .prose-lesson h3,
   .prose-lesson h4,
@@ -151,10 +297,63 @@
     display: none;
   }
   .disclosure-mark {
-    transition: transform 120ms ease;
+    transition: transform 180ms ease;
   }
   details[open] > summary .disclosure-mark {
     transform: rotate(90deg);
+  }
+  @supports (interpolate-size: allow-keywords) {
+    details {
+      interpolate-size: allow-keywords;
+    }
+    details::details-content {
+      height: 0;
+      opacity: 0;
+      overflow: clip;
+      transition:
+        height 220ms ease,
+        opacity 220ms ease,
+        content-visibility 220ms allow-discrete;
+    }
+    details[open]::details-content {
+      height: auto;
+      opacity: 1;
+    }
+  }
+
+  [data-slot="select-content"][data-state="open"] {
+    animation: fade-in 140ms ease both;
+  }
+}
+
+@keyframes hero-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+}
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+}
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+@keyframes grow {
+  from {
+    transform: scaleX(0);
+  }
+}
+@keyframes pulse-ring {
+  0% {
+    box-shadow: 0 0 0 0 rgb(198 244 50 / 0.4);
+  }
+  100% {
+    box-shadow: 0 0 0 10px rgb(198 244 50 / 0);
   }
 }
 

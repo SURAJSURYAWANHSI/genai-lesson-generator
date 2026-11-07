@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
-import { PageHeader, SectionHeading } from '@/components/PageHeader'
+import { PageHeader, Panel } from '@/components/PageHeader'
 import { EmptyState, ErrorBlock, LoadingBlock } from '@/components/QueryState'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -18,12 +18,12 @@ export function EvolutionPage() {
   const sorted = [...(proposals.data ?? [])].sort((a, b) => ORDER[a.status] - ORDER[b.status])
 
   return (
-    <div className="space-y-10">
+    <div className="mx-auto max-w-4xl">
       <PageHeader title="Self-Evolution">
         Improvements the system suggests from past results, which only take effect once a person approves them.
       </PageHeader>
-      <section aria-labelledby="proposals-heading" className="space-y-4">
-        <SectionHeading id="proposals-heading">Proposed improvements</SectionHeading>
+      <div className="page-body space-y-5">
+      <Panel id="proposals-heading" title="Proposed improvements">
         {proposals.isPending && <LoadingBlock rows={3} label="Loading proposed improvements" />}
         {proposals.isError && (
           <ErrorBlock
@@ -46,7 +46,7 @@ export function EvolutionPage() {
         )}
         {sorted.length > 0 && (
           <>
-            <div className="max-w-xs space-y-1.5">
+            <div className="mb-6 max-w-xs space-y-1.5">
               <Label htmlFor="reviewer">Your name</Label>
               <Input
                 id="reviewer"
@@ -63,8 +63,9 @@ export function EvolutionPage() {
             </ul>
           </>
         )}
-      </section>
+      </Panel>
       <PromptVersions />
+      </div>
     </div>
   )
 }

@@ -16,14 +16,14 @@ export function GeneratePage() {
   }, [running])
 
   return (
-    <div className="mx-auto max-w-2xl space-y-8">
+    <div className={running ? 'mx-auto max-w-6xl' : 'mx-auto max-w-3xl'}>
       {running ? (
         <WorkflowPanel />
       ) : (
         <PageHeader title="Generate a lesson">The defaults are ready to go. Change anything you like.</PageHeader>
       )}
       {/* Stays mounted during a run, so "Generate another lesson" returns to the same entries. */}
-      <div hidden={running}>
+      <div hidden={running} className="page-body">
         <GenerateForm />
       </div>
     </div>

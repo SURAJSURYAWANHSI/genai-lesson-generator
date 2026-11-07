@@ -219,7 +219,6 @@ export function summariseStages(state: RunStreamState): StageSummary[] {
   const { attempts, memory, finalization, phase, maxAttempts } = state
   const over = phase === 'finished' || phase === 'failed'
   const first = attempts[0]
-  const latest = attempts[attempts.length - 1]
   const revisions = attempts.slice(1)
   const label = (attempt: AttemptTrace) => attemptWords(attempt.number, maxAttempts)
   // Once a run is over, nothing is still waiting: a stage it never reached was skipped.
@@ -232,6 +231,10 @@ export function summariseStages(state: RunStreamState): StageSummary[] {
       : revisions.length > 0
         ? 'done'
         : 'pending'
+
+  // A stage that repeats stays as it last finished until its next run actually starts.
+  const lastKnown = (read: (attempt: AttemptTrace) => StepStatus): StepStatus =>
+    [...attempts].reverse().map(read).find((status) => status !== 'pending') ?? 'pending'
 
   const stages: StageSummary[] = [
     {
@@ -249,7 +252,7 @@ export function summariseStages(state: RunStreamState): StageSummary[] {
     },
     {
       name: 'Evaluation',
-      status: latest?.evaluation ?? 'pending',
+      status: lastKnown((attempt) => attempt.evaluation),
       notes: attempts.flatMap((attempt) => {
         if (attempt.evaluationError) return [`${label(attempt)}: ${attempt.evaluationError}`]
         if (!attempt.failedCriteria) return []
@@ -262,7 +265,7 @@ export function summariseStages(state: RunStreamState): StageSummary[] {
     },
     {
       name: 'Retry decision',
-      status: latest?.decision ?? 'pending',
+      status: lastKnown((attempt) => attempt.decision),
       notes: attempts.flatMap((attempt) => (attempt.verdict ? [`${label(attempt)}: ${VERDICT_WORDS[attempt.verdict]}`] : [])),
     },
     {

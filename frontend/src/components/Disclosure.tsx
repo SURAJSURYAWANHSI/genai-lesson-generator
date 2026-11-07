@@ -1,6 +1,5 @@
 import { useState, type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
-import { cn } from '@/lib/utils'
 
 /** Native details/summary, so keyboard and screen reader behaviour come for free. */
 export function Disclosure({
@@ -23,7 +22,7 @@ export function Disclosure({
       }}
       className={className}
     >
-      <summary className={cn('flex items-start gap-2 rounded-sm py-2 hover:text-primary')}>
+      <summary className="-mx-2 flex items-start gap-2 rounded-md px-2 py-2.5 transition-colors duration-150 hover:bg-subtle">
         <ChevronRight className="disclosure-mark mt-1 size-4 shrink-0 text-muted-foreground" aria-hidden />
         <div className="min-w-0 flex-1">{summary}</div>
       </summary>

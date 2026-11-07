@@ -1,5 +1,12 @@
 # Changelog
 
+## Unreleased
+
+- Applied an always-dark Midnight Black and Lime Green theme to the dashboard, with a bundled font and transitions.
+- Live workflow: stages run left to right on wide screens, and finished stages stay marked Done while a retry runs.
+- Average attempts shows 0 before any run has finished.
+- Added a hero entry animation and hid scrollbars.
+
 ## 1.0.0 - 2026-11-07
 
 Initial release.

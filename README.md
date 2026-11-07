@@ -108,7 +108,7 @@ Maximum generations: 3 (1 initial + 2 retries). Every generated lesson is evalua
 | Infrastructure | Docker, Docker Compose, environment variables, JSON structured logs |
 | Testing | pytest, httpx |
 
-Beyond the brief's list, the project adds only `pydantic-settings`, `psycopg`, `react-markdown` and the libraries shadcn/ui itself uses.
+Beyond the brief's list, the project adds only `pydantic-settings`, `psycopg`, `react-markdown`, the libraries shadcn/ui itself uses, and one font bundled with the app (Figtree), so nothing loads from a remote origin.
 
 ## 7. Repository structure
 

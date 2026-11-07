@@ -18,6 +18,10 @@ Build the self-evaluating lesson generator specified in `Prompt.md`, with ADRs, 
 | Everything runs and is stored locally | Data in `backend/data/`, Docker ports bound to `127.0.0.1`, no CDNs or remote fonts ([ADR 0013](../adr/0013-sqlite-default-postgres-portable.md)) |
 | Nothing extra in the UI; it's for an interview | UI limited to section 15 of the brief, plus what other sections require |
 | Make the UI simple and friendly | Plain language, one main action per page, a simple list for live progress |
+| The UI looked generated; make it attractive and modern, with proper colours, elevation and transitions | Redesigned with a green and marigold theme, then replaced by the theme below. Transitions on buttons, expanding sections, page entry and the live stepper stayed, and finished stages now stay marked Done during a retry |
+| Apply the Midnight Black and Lime Green theme specified by the owner | One always-dark theme set through tokens in `frontend/src/index.css`. Lime marks primary actions, active states and success. Red is kept for failed and rejected results. One bundled font, Figtree |
+| Hide scrollbars, add a hero entry, show 0 instead of "None yet" | Done. Scrollbars are hidden everywhere, so prompt text now shows in full instead of in a scroll box. A count-up on the stats was tried and removed at the owner's request, because it looked like a glitch |
+| Make the live workflow horizontal | The 6 stages run left to right on wide screens, and stay as a vertical list below 1024px, where six columns don't fit |
 
 ## Decisions
 
@@ -44,7 +48,8 @@ Results at the end of the session:
 | Client disconnect over a real socket | Run finished as PASS at all 3 disconnect points |
 | `npm run build` | Passed, no type errors. JS bundle 606 kB (188 kB gzip), with Vite's size warning accepted to keep the build simple |
 | Dashboard in headless Chrome against a mock backend | 61 walkthrough and 12 simulated-response checks passed, as reported by the frontend build agent. Screenshots reviewed |
-| Remote origins in the built frontend | None loaded: only library text and namespace identifiers contain "http" |
+| Themed dashboard in headless Chrome against a mock backend | 22 checks passed: theme colours, demo, rejection, approve and roll back, phone width, clean console. Screens reviewed. The in-progress look was checked by setting a stage's status directly, because mock runs finish instantly |
+| Remote origins in the built frontend | None requested at runtime. Fonts are bundled |
 | 12-step demo on live Gemini (`gemini-3.6-flash`) | All 12 confirmed: failed Q07, revised 2 sections, then 10 of 10 passed |
 | Errors only a model can detect, on live Gemini | 3 of 3 detected. See [the results](../../outputs/demo/live_evaluator_checks.md) |
 

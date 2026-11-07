@@ -1,5 +1,5 @@
 import { Disclosure } from '@/components/Disclosure'
-import { SectionHeading } from '@/components/PageHeader'
+import { Panel } from '@/components/PageHeader'
 import { ErrorBlock, LoadingBlock } from '@/components/QueryState'
 import { plainText } from '@/lib/format'
 import { usePrompts } from '@/lib/queries'
@@ -14,8 +14,7 @@ function promptTitle(prompt: PromptVersion): string {
 export function PromptVersions() {
   const prompts = usePrompts()
   return (
-    <section aria-labelledby="prompts-heading" className="space-y-2">
-      <SectionHeading id="prompts-heading">Prompt versions</SectionHeading>
+    <Panel id="prompts-heading" title="Prompt versions">
       {prompts.isPending && <LoadingBlock rows={2} label="Loading prompt versions" />}
       {prompts.isError && (
         <ErrorBlock error={prompts.error} title="Prompt versions couldn't be loaded" onRetry={() => void prompts.refetch()} />
@@ -27,20 +26,20 @@ export function PromptVersions() {
             key={prompt.id}
             summary={
               <span className="flex flex-wrap items-baseline justify-between gap-x-4">
-                <span className="font-medium">
+                <span className="font-semibold">
                   {promptTitle(prompt)}
-                  {prompt.is_active && <span className="font-normal text-muted-foreground"> (in use)</span>}
+                  {prompt.is_active && <span className="ml-2 rounded-full bg-pass-soft px-2 py-0.5 text-xs font-bold text-pass">In use</span>}
                 </span>
                 <span className="text-sm text-muted-foreground">{plainText(prompt.change_summary)}</span>
               </span>
             }
           >
-            <p className="max-h-96 max-w-[72ch] overflow-y-auto text-sm whitespace-pre-wrap text-muted-foreground">
+            <p className="max-w-[72ch] text-sm whitespace-pre-wrap text-muted-foreground">
               {prompt.content}
             </p>
           </Disclosure>
         ))}
       </div>
-    </section>
+    </Panel>
   )
 }

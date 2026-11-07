@@ -94,46 +94,48 @@ export function GenerateForm() {
   const refused = state.phase === 'failed' && state.runId === null ? state.error : null
 
   return (
-    <form onSubmit={submit} className="space-y-6">
+    <form onSubmit={submit} className="panel space-y-6">
       <div className="space-y-1.5">
         <Label htmlFor="topic">Topic</Label>
         <Input id="topic" value={topic} onChange={(event) => setTopic(event.target.value)} required />
       </div>
-      <div className="space-y-1.5">
-        <Label htmlFor="education">Learner education</Label>
-        <Input id="education" value={education} maxLength={120} onChange={(event) => setEducation(event.target.value)} />
+      <div className="grid gap-6 sm:grid-cols-2">
+        <div className="space-y-1.5">
+          <Label htmlFor="education">Learner education</Label>
+          <Input id="education" value={education} maxLength={120} onChange={(event) => setEducation(event.target.value)} />
+        </div>
+        <SelectField
+          label="English proficiency"
+          value={english}
+          onChange={(value) => setEnglish(value as EnglishLevel)}
+          options={[
+            { value: 'basic', label: 'Basic' },
+            { value: 'intermediate', label: 'Intermediate' },
+            { value: 'advanced', label: 'Advanced' },
+          ]}
+        />
+        <SelectField
+          label="Technical level"
+          value={technical}
+          onChange={(value) => setTechnical(value as TechnicalLevel)}
+          options={[
+            { value: 'beginner', label: 'Beginner' },
+            { value: 'intermediate', label: 'Intermediate' },
+            { value: 'advanced', label: 'Advanced' },
+          ]}
+        />
+        <SelectField
+          label="Retry limit"
+          value={retries}
+          onChange={setRetries}
+          help="How many times a failed lesson can be rewritten."
+          options={[
+            { value: '0', label: 'No retries' },
+            { value: '1', label: '1 retry' },
+            { value: '2', label: '2 retries' },
+          ]}
+        />
       </div>
-      <SelectField
-        label="English proficiency"
-        value={english}
-        onChange={(value) => setEnglish(value as EnglishLevel)}
-        options={[
-          { value: 'basic', label: 'Basic' },
-          { value: 'intermediate', label: 'Intermediate' },
-          { value: 'advanced', label: 'Advanced' },
-        ]}
-      />
-      <SelectField
-        label="Technical level"
-        value={technical}
-        onChange={(value) => setTechnical(value as TechnicalLevel)}
-        options={[
-          { value: 'beginner', label: 'Beginner' },
-          { value: 'intermediate', label: 'Intermediate' },
-          { value: 'advanced', label: 'Advanced' },
-        ]}
-      />
-      <SelectField
-        label="Retry limit"
-        value={retries}
-        onChange={setRetries}
-        help="How many times the lesson can be rewritten if it fails a check."
-        options={[
-          { value: '0', label: 'No retries' },
-          { value: '1', label: '1 retry' },
-          { value: '2', label: '2 retries' },
-        ]}
-      />
       <div className="space-y-1.5">
         <Label htmlFor="reference">
           Reference material <span className="font-normal text-muted-foreground">(optional)</span>
@@ -151,7 +153,7 @@ export function GenerateForm() {
       </div>
 
       {demoAllowed && (
-        <div className="space-y-4">
+        <div className="space-y-4 rounded-lg bg-subtle p-4">
           <div className="flex items-start justify-between gap-4">
             <div>
               <Label htmlFor="demo-mode">Demo mode</Label>
@@ -160,8 +162,8 @@ export function GenerateForm() {
             <Switch id="demo-mode" checked={demoOn} onCheckedChange={setDemoMode} />
           </div>
           {demoOn && (
-            <div className="space-y-4 rounded-lg bg-caution-soft p-4">
-              <p className="text-sm font-semibold text-caution">DEMO / TEST MODE</p>
+            <div className="tab-enter space-y-4 rounded-md border border-lime-border bg-lime-soft p-4">
+              <p className="text-sm font-bold text-primary">DEMO / TEST MODE</p>
               <SelectField
                 label="Error injection type"
                 value={injection}
@@ -195,7 +197,7 @@ export function GenerateForm() {
           Generate Lesson
         </Button>
         {demoAllowed && (
-          <Button type="button" variant="ghost" disabled={active} onClick={() => start(DEMO_REQUEST)}>
+          <Button type="button" variant="outline" size="lg" disabled={active} onClick={() => start(DEMO_REQUEST)}>
             Run the demo instead
           </Button>
         )}

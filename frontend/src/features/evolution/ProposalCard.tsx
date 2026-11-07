@@ -32,9 +32,9 @@ export function ProposalCard({ proposal, reviewer }: { proposal: Proposal; revie
   }
 
   return (
-    <li className="space-y-2 py-5">
+    <li className="space-y-2 py-5 first:pt-0 last:pb-0">
       <div className="flex flex-wrap items-baseline justify-between gap-x-4 gap-y-1">
-        <h3 className="min-w-0 font-medium">{plainText(proposal.title)}</h3>
+        <h3 className="min-w-0 text-lg font-bold">{plainText(proposal.title)}</h3>
         <DecisionStatus status={proposal.status} />
       </div>
       <p className="text-muted-foreground">{plainText(proposal.rationale)}</p>
@@ -50,7 +50,7 @@ export function ProposalCard({ proposal, reviewer }: { proposal: Proposal; revie
       <div className="flex flex-wrap gap-2 empty:hidden">
         {proposal.status === 'PENDING' && (
           <>
-            <Button size="sm" variant="outline" disabled={mutation.isPending} onClick={() => decide('approve')}>
+            <Button size="sm" disabled={mutation.isPending} onClick={() => decide('approve')}>
               Approve
             </Button>
             <Button size="sm" variant="ghost" disabled={mutation.isPending} onClick={() => decide('reject')}>

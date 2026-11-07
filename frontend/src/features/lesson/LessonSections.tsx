@@ -17,7 +17,7 @@ function EmptySection() {
 function ExampleField({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <h4 className="mb-1 font-semibold">{label}</h4>
+      <h4 className="mb-1.5 font-bold">{label}</h4>
       {children}
     </div>
   )
@@ -50,9 +50,9 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
               return (
                 <li
                   key={material.title}
-                  className={`rounded-md border p-3 ${selected ? 'border-primary' : ''}`}
+                  className={`rounded-md border p-4 transition-shadow duration-150 ${selected ? 'border-lime-border bg-lime-soft' : 'bg-card'}`}
                 >
-                  <p className="mb-1 flex flex-wrap items-center justify-between gap-2 text-sm font-semibold">
+                  <p className="mb-1 flex flex-wrap items-center justify-between gap-2 text-sm font-bold">
                     {material.title}
                     <span
                       className={`inline-flex items-center gap-1 text-xs font-medium ${selected ? 'text-primary' : 'text-muted-foreground'}`}
@@ -74,7 +74,7 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
       </ExampleField>
       <ExampleField label={labels.step}>
         {example.intermediate_step ? (
-          <p className="rounded-md bg-muted px-4 py-3 whitespace-pre-wrap">
+          <p className="prompt-block">
             {example.intermediate_step}
           </p>
         ) : (
@@ -91,7 +91,7 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
 export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section: LessonSection; rag: boolean }) {
   switch (section) {
     case 'title':
-      return lesson.title ? <p className="text-2xl font-semibold tracking-tight">{lesson.title}</p> : <EmptySection />
+      return lesson.title ? <p className="font-display text-3xl leading-tight font-bold tracking-tight text-balance">{lesson.title}</p> : <EmptySection />
     case 'introduction':
     case 'what_it_means':
     case 'why_it_matters':
@@ -117,8 +117,8 @@ export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section:
       return (
         <ol className="space-y-3">
           {lesson.step_by_step_process.map((step) => (
-            <li key={step.step_number} className="grid grid-cols-[2rem_1fr] gap-1">
-              <span className="font-semibold tabular-nums">{step.step_number}.</span>
+            <li key={step.step_number} className="grid grid-cols-[1.75rem_1fr] gap-3">
+              <span className="step-number">{step.step_number}</span>
               <div className="min-w-0">
                 <p className="font-semibold">{step.title}</p>
                 <Markdown>{step.explanation}</Markdown>
@@ -134,8 +134,8 @@ export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section:
       return (
         <ol className="space-y-3">
           {lesson.example_walkthrough.map((step) => (
-            <li key={step.step_number} className="grid grid-cols-[2rem_1fr] gap-1">
-              <span className="font-semibold tabular-nums">{step.step_number}.</span>
+            <li key={step.step_number} className="grid grid-cols-[1.75rem_1fr] gap-3">
+              <span className="step-number">{step.step_number}</span>
               <div className="min-w-0 space-y-1">
                 <Markdown>{step.action}</Markdown>
                 <div className="text-muted-foreground">
@@ -188,8 +188,8 @@ export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section:
       return (
         <ol className="space-y-2">
           {lesson.knowledge_check_questions.map((item) => (
-            <li key={item.number} className="grid grid-cols-[2rem_1fr] gap-1">
-              <span className="font-semibold tabular-nums">{item.number}.</span>
+            <li key={item.number} className="grid grid-cols-[1.75rem_1fr] gap-3">
+              <span className="step-number">{item.number}</span>
               <Markdown>{item.question}</Markdown>
             </li>
           ))}
@@ -200,8 +200,8 @@ export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section:
       return (
         <ol className="space-y-2">
           {lesson.knowledge_check_answers.map((item) => (
-            <li key={item.number} className="grid grid-cols-[2rem_1fr] gap-1">
-              <span className="font-semibold tabular-nums">{item.number}.</span>
+            <li key={item.number} className="grid grid-cols-[1.75rem_1fr] gap-3">
+              <span className="step-number">{item.number}</span>
               <Markdown>{item.answer}</Markdown>
             </li>
           ))}
@@ -220,7 +220,7 @@ export function LessonSections({ lesson, topic }: { lesson: Lesson; topic: strin
           <SectionBody key={section} lesson={lesson} section={section} rag={rag} />
         ) : (
           <section key={section}>
-            <h3 className="mb-3 text-xl font-semibold tracking-tight">{sectionLabel(section)}</h3>
+            <h3 className="mb-3 text-xl font-bold">{sectionLabel(section)}</h3>
             <SectionBody lesson={lesson} section={section} rag={rag} />
           </section>
         ),

@@ -15,14 +15,14 @@ function ChangedSections({ entry, topic, revised }: { entry: Rejection; topic: s
     <div className="space-y-6">
       {changed.map((section) => (
         <section key={section} className="space-y-3">
-          <h5 className="font-medium">{sectionLabel(section)}</h5>
-          <div className="grid gap-6 lg:grid-cols-2">
-            <div className="min-w-0">
-              <p className="mb-2 text-sm font-medium text-fail">Before</p>
+          <h5 className="font-semibold">{sectionLabel(section)}</h5>
+          <div className="grid items-start gap-3 lg:grid-cols-2">
+            <div className="min-w-0 rounded-lg bg-fail-soft/60 p-4">
+              <p className="mb-2 text-sm font-bold text-fail">Before</p>
               <SectionBody lesson={entry.previous_lesson} section={section} rag={rag} />
             </div>
-            <div className="min-w-0">
-              <p className="mb-2 text-sm font-medium text-pass">After</p>
+            <div className="min-w-0 rounded-lg bg-pass-soft/60 p-4">
+              <p className="mb-2 text-sm font-bold text-pass">After</p>
               <SectionBody lesson={revised} section={section} rag={rag} />
             </div>
           </div>
@@ -35,8 +35,8 @@ function ChangedSections({ entry, topic, revised }: { entry: Rejection; topic: s
 function RejectionCard({ entry, topic }: { entry: Rejection; topic: string }) {
   const feedback = entry.generator_feedback
   return (
-    <li className="rounded-lg border bg-card px-5 py-4">
-      <h3 className="font-semibold">
+    <li className="panel">
+      <h3 className="text-lg font-bold">
         Attempt {entry.attempt} failed {criterionList(entry.failed_criterion_ids)}.
       </h3>
       <p className="mt-1 text-muted-foreground">
@@ -50,7 +50,7 @@ function RejectionCard({ entry, topic }: { entry: Rejection; topic: string }) {
             <h4 className="font-semibold">What went wrong</h4>
             {entry.failed_checks.map((check) => (
               <p key={check.criterion_id} className="max-w-[72ch]">
-                <span className="font-medium">{criterionLabel(check.criterion_id)}: </span>
+                <span className="font-semibold">{criterionLabel(check.criterion_id)}: </span>
                 <span className="text-muted-foreground">{plainText(check.failure_reason ?? 'No reason recorded.')}</span>
               </p>
             ))}

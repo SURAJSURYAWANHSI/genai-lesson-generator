@@ -1,18 +1,18 @@
 import { Link } from 'react-router-dom'
-import { EmptyState } from '@/components/QueryState'
+import { PageHeader } from '@/components/PageHeader'
 import { Button } from '@/components/ui/button'
 
 export function NotFoundPage() {
   return (
-    <EmptyState
+    <PageHeader
       title="This page doesn't exist"
-      action={
-        <Button asChild>
+      actions={
+        <Button asChild size="lg">
           <Link to="/">Go to the dashboard</Link>
         </Button>
       }
     >
       The address may be mistyped.
-    </EmptyState>
+    </PageHeader>
   )
 }
