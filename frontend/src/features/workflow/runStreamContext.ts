@@ -6,7 +6,7 @@ export interface RunStreamValue {
   state: RunStreamState
   active: boolean
   start: (request: GenerateLessonRequest) => void
-  stop: () => void
+  /** Clears a finished run. Does nothing while one is in progress. */
   reset: () => void
 }
 

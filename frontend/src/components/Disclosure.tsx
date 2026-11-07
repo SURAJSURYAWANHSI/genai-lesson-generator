@@ -1,4 +1,4 @@
-import type { ReactNode } from 'react'
+import { useState, type ReactNode } from 'react'
 import { ChevronRight } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -14,13 +14,21 @@ export function Disclosure({
   defaultOpen?: boolean
   className?: string
 }) {
+  const [opened, setOpened] = useState(defaultOpen)
   return (
-    <details open={defaultOpen} className={cn('rounded-md border bg-card', className)}>
-      <summary className="flex items-start gap-2 rounded-md px-3 py-2.5 hover:bg-muted/60">
-        <ChevronRight className="disclosure-mark mt-0.5 size-4 shrink-0 text-muted-foreground" aria-hidden />
+    <details
+      open={defaultOpen}
+      onToggle={(event) => {
+        if (event.currentTarget.open) setOpened(true)
+      }}
+      className={className}
+    >
+      <summary className={cn('flex items-start gap-2 rounded-sm py-2 hover:text-primary')}>
+        <ChevronRight className="disclosure-mark mt-1 size-4 shrink-0 text-muted-foreground" aria-hidden />
         <div className="min-w-0 flex-1">{summary}</div>
       </summary>
-      <div className="border-t px-3 py-3">{children}</div>
+      {/* The body renders once opened, because some of these hold long lesson text. */}
+      <div className="pt-1 pb-4 pl-6">{opened && children}</div>
     </details>
   )
 }

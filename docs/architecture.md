@@ -120,3 +120,5 @@ erDiagram
 | `error` | A safe `message` |
 
 Request problems (validation, duplicates, injection refusal) return a normal HTTP error before streaming starts.
+
+A run executes on its own thread and doesn't depend on the client. If the browser closes, the run still finishes and is recorded, and can be opened later from the run history.

@@ -19,7 +19,7 @@ MOCK_MODEL_NAME = "mock-rule-based-v1"
 # Defaults only for vendors whose current model IDs were checked against official docs.
 # OpenAI must be configured explicitly with GENERATOR_MODEL.
 DEFAULT_MODELS: dict[str, str] = {
-    "gemini": "gemini-3.8-flash",
+    "gemini": "gemini-3.6-flash",
     "anthropic": "claude-opus-5-5",
 }
 

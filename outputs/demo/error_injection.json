@@ -10,27 +10,23 @@
       "attempt": 1,
       "section": "practical_example",
       "before": {
-        "scenario": "A company has a helper chatbot for its staff. An employee wants to know how many leave days they can carry into next year.",
-        "starting_input": "How many leave days can I carry into next year?",
+        "scenario": "A company worker asks about the office policy for working from home.",
+        "starting_input": "How many days per week can I work from home?",
         "source_materials": [
           {
-            "title": "Leave Policy",
-            "content": "Employees may carry a maximum of 5 unused leave days into the next calendar year."
+            "title": "Company Travel Policy.txt",
+            "content": "Employees traveling for business will receive fifty dollars per day for food expenses."
           },
           {
-            "title": "Travel Policy",
-            "content": "Employees must book work travel at least 7 days before the trip."
-          },
-          {
-            "title": "Office Hours",
-            "content": "The office is open from 9 AM to 6 PM, Monday to Friday."
+            "title": "Remote Work Policy 2024.txt",
+            "content": "Employees are allowed to work from home up to two days per week with manager approval."
           }
         ],
         "selected_materials": [
-          "Leave Policy"
+          "Remote Work Policy 2024.txt"
         ],
-        "intermediate_step": "Use only the information below to answer the question.\nInformation: Employees may carry a maximum of 5 unused leave days into the next calendar year.\nQuestion: How many leave days can I carry into next year?",
-        "final_result": "You can carry up to 5 unused leave days into next year. This comes from the Leave Policy."
+        "intermediate_step": "Answer the question using only the provided context.\nContext: Remote Work Policy 2024.txt - Employees are allowed to work from home up to two days per week with manager approval.\nQuestion: How many days per week can I work from home?",
+        "final_result": "Based on the Remote Work Policy 2024, you can work from home up to two days per week with manager approval."
       },
       "after": {
         "scenario": "RAG can be used by companies to answer questions from their documents.",

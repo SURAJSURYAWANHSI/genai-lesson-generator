@@ -1,5 +1,7 @@
 """The real LangGraph workflow with a real database, using scripted model responses."""
 
+import time
+
 import pytest
 from langgraph.errors import GraphRecursionError
 
@@ -145,17 +147,19 @@ def test_recursion_guard_stops_a_stuck_run(make_service):
         service.graph.invoke(state, config={"recursion_limit": 5})
 
 
-def test_client_disconnect_closes_the_run(make_service):
+def test_run_still_finishes_after_client_disconnects(make_service):
     service = make_service([clean_lesson()], [passing_evaluation()])
     state = service.prepare(GenerateLessonRequest(topic="Introduction to RAG"))
     stream = service.stream(state)
-    while "load_memory" not in next(stream):  # The run exists, and is partway through.
-        pass
-    assert repo.get_run_detail(state["run_id"])["status"] == "RUNNING"
-    stream.close()
-    detail = repo.get_run_detail(state["run_id"])
-    assert detail["status"] == "ERROR"
-    assert "disconnected" in detail["error_message"]
+    next(stream)
+    stream.close()  # The client went away after the first event.
+    deadline = time.monotonic() + 10
+    status = "RUNNING"
+    while status == "RUNNING" and time.monotonic() < deadline:
+        time.sleep(0.05)
+        if repo.run_exists(state["run_id"]):
+            status = repo.get_run_detail(state["run_id"])["status"]
+    assert status == "PASS"
 
 
 def test_provider_failure_ends_the_run_with_error(make_service, run_lesson):

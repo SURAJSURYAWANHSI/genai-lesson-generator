@@ -2,6 +2,8 @@
 
 import json
 import logging
+import queue
+import threading
 import uuid
 from collections.abc import Iterator
 from typing import Any
@@ -123,33 +125,37 @@ class RunService:
         return repo.get_generate_response(run_id)
 
     def stream(self, state: LessonState) -> Iterator[str]:
+        """Stream progress while the run executes on its own thread.
+
+        The run doesn't depend on the client: if the browser closes, it still finishes and
+        is recorded, and can be opened later from the run history.
+        """
+        events: queue.Queue[str | None] = queue.Queue()
+        threading.Thread(target=self._execute_streaming, args=(state, events), daemon=True).start()
+        yield sse("started", {"run_id": state["run_id"], "maximum_attempts": state["maximum_attempts"]})
+        while (event := events.get()) is not None:
+            yield event
+
+    def _execute_streaming(self, state: LessonState, events: "queue.Queue[str | None]") -> None:
         run_id = state["run_id"]
         progress: dict[str, Any] = {}
-        finished = False
-        yield sse("started", {"run_id": run_id, "maximum_attempts": state["maximum_attempts"]})
         try:
             for mode, chunk in self.graph.stream(state, config=_GRAPH_CONFIG, stream_mode=["updates", "custom"]):
                 if mode == "custom":
-                    yield sse("stage", chunk)
+                    events.put(sse("stage", chunk))
                     continue
                 for node, update in chunk.items():
-                    yield sse("stage", _describe(node, update or {}, progress))
-            finished = True
-            yield sse("complete", repo.get_generate_response(run_id))
+                    events.put(sse("stage", _describe(node, update or {}, progress)))
+            events.put(sse("complete", repo.get_generate_response(run_id)))
         except GraphRecursionError:
             logger.error("workflow_recursion_limit", extra={"run_id": run_id})
             repo.abort_run_if_running(run_id, "The workflow exceeded its step limit and was stopped.")
-            finished = True
-            yield sse("error", {"run_id": run_id, "message": "The workflow exceeded its step limit."})
+            events.put(sse("error", {"run_id": run_id, "message": "The workflow exceeded its step limit."}))
         except DuplicateRunError as error:
-            finished = True
-            yield sse("error", {"run_id": run_id, "message": str(error)})
+            events.put(sse("error", {"run_id": run_id, "message": str(error)}))
         except Exception:
             logger.exception("workflow_failed", extra={"run_id": run_id})
             repo.abort_run_if_running(run_id, UNEXPECTED_ERROR_MESSAGE)
-            finished = True
-            yield sse("error", {"run_id": run_id, "message": UNEXPECTED_ERROR_MESSAGE})
+            events.put(sse("error", {"run_id": run_id, "message": UNEXPECTED_ERROR_MESSAGE}))
         finally:
-            # Reached without finishing only when the client disconnected mid-stream.
-            if not finished:
-                repo.abort_run_if_running(run_id, "The client disconnected before the run finished.")
+            events.put(None)

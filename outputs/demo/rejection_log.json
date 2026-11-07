@@ -1,7 +1,7 @@
 [
   {
-    "id": "10651051-81e4-46c6-93c5-7447cdfb8da4",
-    "run_id": "091e79a9-17d1-40ab-96b9-636f2d8aa31c",
+    "id": "acb70fe1-0cf8-4655-b235-1bcb74b5ec3f",
+    "run_id": "0823a331-ce32-4d60-a0f8-4a889522f6ee",
     "attempt": 1,
     "lesson_version": 1,
     "status": "FAIL",
@@ -12,9 +12,9 @@
       {
         "criterion_id": "Q07",
         "criterion_name": "Practical Example",
-        "evidence": "Deterministic validator: The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. Model evidence: [Mock rule-based check] The example shows 0 documents and 0 retrieved documents.",
-        "failure_reason": "The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. The example does not demonstrate the retrieval stage.",
-        "suggested_correction": "Write the 'example_walkthrough' section. Show a full worked example from the starting input through to the final result. Show a question, at least two documents, the selected document, the prompt given to the model and the final answer. Show a question, multiple documents, the selected document and the final answer."
+        "evidence": "Deterministic validator: The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. Model evidence: The practical_example section contains empty fields ('starting_input': '', 'source_materials': [], 'selected_materials': [], 'intermediate_step': '', 'final_result': '') and example_walkthrough is an empty array.",
+        "failure_reason": "The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. The lesson does not provide a practical example demonstrating the complete process. It lacks a concrete question, source documents, selected document chunk, prompt, and final generated answer.",
+        "suggested_correction": "Write the 'example_walkthrough' section. Show a full worked example from the starting input through to the final result. Show a question, at least two documents, the selected document, the prompt given to the model and the final answer. Fill in practical_example and example_walkthrough with a complete step-by-step example, including a specific user question, a list of candidate documents, the selected relevant chunk, the full augmented prompt created for the AI model, and the final generated response."
       }
     ],
     "generator_feedback": {
@@ -23,9 +23,9 @@
         {
           "criterion_id": "Q07",
           "criterion_name": "Practical Example",
-          "evidence": "Deterministic validator: The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. Model evidence: [Mock rule-based check] The example shows 0 documents and 0 retrieved documents.",
-          "failure_reason": "The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. The example does not demonstrate the retrieval stage.",
-          "suggested_correction": "Write the 'example_walkthrough' section. Show a full worked example from the starting input through to the final result. Show a question, at least two documents, the selected document, the prompt given to the model and the final answer. Show a question, multiple documents, the selected document and the final answer.",
+          "evidence": "Deterministic validator: The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. Model evidence: The practical_example section contains empty fields ('starting_input': '', 'source_materials': [], 'selected_materials': [], 'intermediate_step': '', 'final_result': '') and example_walkthrough is an empty array.",
+          "failure_reason": "The 'example_walkthrough' section is empty. The practical example has no starting input. The practical example has no final result. A RAG example needs at least two documents to show retrieval choosing between them. The example does not show which document was retrieved. The example does not show how the retrieved text is given to the model. The lesson does not provide a practical example demonstrating the complete process. It lacks a concrete question, source documents, selected document chunk, prompt, and final generated answer.",
+          "suggested_correction": "Write the 'example_walkthrough' section. Show a full worked example from the starting input through to the final result. Show a question, at least two documents, the selected document, the prompt given to the model and the final answer. Fill in practical_example and example_walkthrough with a complete step-by-step example, including a specific user question, a list of candidate documents, the selected relevant chunk, the full augmented prompt created for the AI model, and the final generated response.",
           "instruction": "Add a concrete worked example that shows every stage with real content, not a description of one.",
           "target_sections": [
             "practical_example",
@@ -54,69 +54,65 @@
       ]
     },
     "previous_lesson": {
-      "title": "Introduction to RAG (Retrieval-Augmented Generation)",
-      "introduction": "Imagine you ask a very smart friend a question about your company's leave rules. Your friend is good at explaining things, but has never seen those rules. A good friend would first read the rules, and then answer you. RAG helps an AI model work in the same way. In this lesson, you will learn what RAG is, why people use it, and how it works step by step. You do not need any technical knowledge to follow this lesson.",
-      "what_it_means": "An AI model is a computer program that has learned patterns from a very large amount of text. It can read a question and write an answer in normal language. RAG stands for Retrieval-Augmented Generation. It is a way of helping an AI model answer questions by first finding useful information and then giving that information to the model. The name has three parts. Retrieval means finding and bringing back useful information from a collection of documents. Augmentation means adding something extra. Here, we add the information we found to the question. Generation means creating something new. Here, the AI model writes the answer. So RAG is simple: find the information, add it to the question, and then write the answer.",
-      "why_it_matters": "An AI model only knows what it learned during its training. Training stops on a certain date, so the model may not know about recent events. It also does not know private information, such as your company's rules or a school's fee list. When a model does not know something, it can still give an answer that sounds confident but is wrong. This kind of wrong answer is called a hallucination. RAG helps with these problems. The model gets the correct information at the moment you ask. This makes wrong answers less likely. It also means people can update their documents at any time without training the model again.",
+      "title": "Introduction to Retrieval-Augmented Generation (RAG)",
+      "introduction": "Artificial intelligence can write text and answer questions. However, an AI model can make mistakes or lack private company information. An AI model, also called a large language model, is a computer program trained on text to recognize patterns and generate words. This lesson introduces Retrieval-Augmented Generation, also called RAG. RAG is a method that helps AI models give better answers by searching true documents first.",
+      "what_it_means": "Retrieval-Augmented Generation, or RAG, is a three-part process for answering questions with an AI model. First, retrieval means finding relevant text from outside documents. Second, augmentation means adding that found text into the instruction given to the AI model. An instruction sent to an AI model is called a prompt. Third, generation means the AI model reads the prompt with the added text and writes the final answer in plain language.",
+      "why_it_matters": "An AI model only knows what it learned during training up to a cutoff date. It does not know private business notes or facts created after its training. Also, an AI model can create confident but false answers, which are called hallucinations. RAG helps because it supplies real documents directly to the model. This makes answers more accurate, keeps data private, and allows updates without retraining the entire AI model.",
       "important_components": [
         {
-          "name": "Documents",
-          "explanation": "These are the sources of information, such as policy files, web pages or manuals. The answer can only be as good as these documents."
+          "name": "Retrieval",
+          "explanation": "Retrieval is the search step. The system looks outside the AI model to find document pieces that match the user question."
         },
         {
-          "name": "Chunks",
-          "explanation": "A chunk is a small piece of a document. Long documents are cut into chunks so that the system can find just the part it needs."
+          "name": "Augmentation",
+          "explanation": "Augmentation is the combining step. The system takes the found document text and attaches it to the question inside a single prompt."
         },
         {
-          "name": "Embeddings",
-          "explanation": "An embedding is a list of numbers that represents the meaning of a piece of text. Text with similar meaning gets similar numbers. This lets a computer compare meaning, not just exact words."
+          "name": "Generation",
+          "explanation": "Generation is the writing step. The AI model reads the combined prompt and creates a clear answer in human language."
         },
         {
-          "name": "Vector database",
-          "explanation": "A vector database is a place that stores embeddings together with their original text. It can quickly find the stored text whose meaning is closest to a question."
+          "name": "Embedding",
+          "explanation": "An embedding is a list of numbers that represents the meaning of a piece of text. Text with similar meaning gets similar numbers so a computer can compare them."
         },
         {
-          "name": "Retriever",
-          "explanation": "The retriever is the part of the system that does the searching. It takes the question and brings back the most useful chunks."
-        },
-        {
-          "name": "AI model",
-          "explanation": "The AI model reads the question and the chunks the retriever found. Then it writes the final answer in clear language."
+          "name": "Vector Database",
+          "explanation": "A vector database is a special searchable store that holds document chunks and their numerical embeddings."
         }
       ],
       "step_by_step_process": [
         {
           "step_number": 1,
-          "title": "Prepare the documents",
-          "explanation": "Collect the documents and cut them into chunks. This happens before anyone asks a question."
+          "title": "Splitting Documents into Chunks",
+          "explanation": "Large documents are cut into smaller pieces called chunks. Small chunks help the search system find precise facts easily."
         },
         {
           "step_number": 2,
-          "title": "Store the documents",
-          "explanation": "Turn each chunk into an embedding, and save the embedding and its text in a vector database."
+          "title": "Converting Chunks to Embeddings",
+          "explanation": "Each chunk is turned into an embedding, which is a list of numbers showing its meaning. These numbers and original texts are saved in a vector database."
         },
         {
           "step_number": 3,
-          "title": "Receive the question",
-          "explanation": "A person asks a question. The system turns the question into an embedding in the same way."
+          "title": "Converting Question to Embedding",
+          "explanation": "When a user asks a question, the system converts the question into numbers using the exact same embedding model."
         },
         {
           "step_number": 4,
-          "title": "Search and retrieve",
-          "explanation": "The system compares the question's numbers with the stored numbers. It brings back the chunks with the closest meaning. This is the retrieval stage."
+          "title": "Searching for Related Chunks",
+          "explanation": "The vector database compares the question numbers with document numbers. It selects the chunks with the closest meaning in a process called semantic search."
         },
         {
           "step_number": 5,
-          "title": "Add the information to the prompt",
-          "explanation": "A prompt is the text we send to the AI model. The system puts the retrieved chunks and the question together in one prompt, with an instruction to answer using that information. This is the augmentation stage."
+          "title": "Augmenting the Prompt",
+          "explanation": "The system creates a new message called a prompt. It combines the retrieved chunk text, the user question, and an instruction to rely only on the chunk text."
         },
         {
           "step_number": 6,
-          "title": "Write the answer",
-          "explanation": "The AI model reads the prompt, uses the retrieved information, and writes the answer. This is the generation stage."
+          "title": "Generating the Answer",
+          "explanation": "The AI model reads the prompt and writes an answer. The model can also cite which source document it used."
         }
       ],
-      "real_world_analogy": "Think of a student taking an open-book exam. The student is the AI model. The library is the collection of documents. When a question comes, the student finds the right page in the book (retrieval), keeps that page open next to the question (augmentation), and writes the answer in their own words (generation). The analogy has one limit: the student understands the book, but an AI model only works with patterns in text, so it can still make mistakes.",
+      "real_world_analogy": "Imagine an open-book history exam. A student could try to answer every question using only memory. If the student forgot a fact or never learned it, they might guess wrong. RAG is like letting the student look at a specific textbook page before writing each answer. The student searches the textbook index for the right page, reads the page, and then writes the answer. However, this analogy stops being exact because a human student actually understands facts, while an AI model only predicts words based on patterns in the provided text.",
       "practical_example": {
         "scenario": "RAG can be used by companies to answer questions from their documents.",
         "starting_input": "",
@@ -128,321 +124,316 @@
       "example_walkthrough": [],
       "terminology": [
         {
-          "term": "AI model",
-          "simple_explanation": "A computer program that has learned from a lot of text and can write answers."
+          "term": "AI Model",
+          "simple_explanation": "A computer program trained on large text datasets to recognize patterns and write words."
+        },
+        {
+          "term": "Retrieval-Augmented Generation (RAG)",
+          "simple_explanation": "A method that searches outside documents for facts and gives them to an AI model to answer a question."
         },
         {
           "term": "Retrieval",
-          "simple_explanation": "Finding and bringing back useful information."
+          "simple_explanation": "The process of searching and selecting relevant document text from a store."
         },
         {
           "term": "Augmentation",
-          "simple_explanation": "Adding the information that was found to the question."
+          "simple_explanation": "The process of putting selected text into the instruction given to an AI model."
         },
         {
           "term": "Generation",
-          "simple_explanation": "The AI model writing the answer."
-        },
-        {
-          "term": "Chunk",
-          "simple_explanation": "A small piece of a document."
-        },
-        {
-          "term": "Embedding",
-          "simple_explanation": "A list of numbers that represents the meaning of text."
-        },
-        {
-          "term": "Vector database",
-          "simple_explanation": "A store that keeps embeddings and can quickly find similar meaning."
+          "simple_explanation": "The process where an AI model writes an answer based on its prompt."
         },
         {
           "term": "Prompt",
-          "simple_explanation": "The text we send to an AI model."
+          "simple_explanation": "The input text or instruction sent to an AI model."
+        },
+        {
+          "term": "Chunk",
+          "simple_explanation": "A small piece of a larger text document."
+        },
+        {
+          "term": "Embedding",
+          "simple_explanation": "A list of numbers representing the meaning of a text segment."
+        },
+        {
+          "term": "Vector Database",
+          "simple_explanation": "A database that stores embeddings and allows fast search based on text meaning."
+        },
+        {
+          "term": "Semantic Search",
+          "simple_explanation": "A search method that finds text with similar meaning rather than just matching exact words."
         },
         {
           "term": "Hallucination",
-          "simple_explanation": "An answer from an AI model that sounds confident but is wrong."
+          "simple_explanation": "A mistake where an AI model produces confident but false information."
         }
       ],
       "common_mistakes": [
         {
-          "misconception": "RAG makes the AI model always correct.",
-          "correction": "RAG lowers the chance of wrong answers, but the model can still misunderstand the text."
+          "misconception": "RAG permanently retrains the AI model with new documents.",
+          "correction": "RAG does not retrain or permanently change the AI model. It only gives document text inside the prompt for a single question."
         },
         {
-          "misconception": "RAG teaches the model new things permanently.",
-          "correction": "The model is not trained again. It only uses the retrieved text for that one question."
+          "misconception": "RAG completely eliminates all AI mistakes.",
+          "correction": "RAG reduces false statements, but an AI model can still misread context or ignore details."
         },
         {
-          "misconception": "RAG works well with any documents.",
-          "correction": "If the documents are old, wrong or missing, the answer can also be poor. Good answers need good documents."
-        },
-        {
-          "misconception": "Search always finds the right text.",
-          "correction": "Retrieval can bring back the wrong text. When that happens, the final answer can be wrong too."
+          "misconception": "RAG always produces a good answer even if the source documents are bad.",
+          "correction": "If the source documents are wrong or the search retrieves incorrect text, the final answer will also be poor."
         }
       ],
-      "summary": "RAG helps an AI model answer using information it was not trained on. First the system stores documents in a form it can search. When a question comes, it finds the most useful text, adds that text to the prompt, and lets the model write the answer. This gives more up-to-date and more trustworthy answers, but it does not make them perfect.",
+      "summary": "Retrieval-Augmented Generation (RAG) improves AI accuracy by searching external documents before generating an answer. It breaks documents into chunks, turns them into numerical embeddings, and stores them in a vector database. When a user asks a question, semantic search finds the most relevant chunks. The system augments the prompt with these chunks. Finally, the AI model generates an accurate, source-based answer without requiring model retraining.",
       "key_takeaways": [
-        "RAG means find the information, add it to the question, then write the answer.",
-        "Retrieval finds, augmentation adds, and generation writes.",
-        "Documents are usually split into chunks and stored as embeddings so they can be searched by meaning.",
-        "RAG reduces wrong answers, but it cannot remove them completely.",
-        "The quality of the answer depends on the quality of the documents and the search."
+        "RAG stands for Retrieval-Augmented Generation.",
+        "Retrieval finds relevant document chunks using semantic search with embeddings.",
+        "Augmentation adds retrieved text directly into the prompt given to the AI model.",
+        "Generation creates the final answer using the provided text context.",
+        "RAG does not retrain the AI model, but helps prevent false facts called hallucinations."
       ],
       "knowledge_check_questions": [
         {
           "number": 1,
-          "question": "What do the three parts of the name RAG mean?"
+          "question": "What do the three words in RAG stand for?"
         },
         {
           "number": 2,
-          "question": "Why can a normal AI model not answer questions about your company's private rules?"
+          "question": "Why are long documents split into smaller pieces called chunks?"
         },
         {
           "number": 3,
-          "question": "In the leave example, why was the Leave Policy selected and not the Travel Policy?"
+          "question": "What is an embedding?"
         },
         {
           "number": 4,
-          "question": "Does RAG guarantee that every answer is correct? Why or why not?"
+          "question": "Does RAG permanently retrain the AI model with new text?"
         }
       ],
       "knowledge_check_answers": [
         {
           "number": 1,
-          "answer": "Retrieval means finding useful information. Augmentation means adding it to the question. Generation means the AI model writes the answer."
+          "answer": "RAG stands for Retrieval, Augmentation, and Generation."
         },
         {
           "number": 2,
-          "answer": "The model was not trained on those private rules, so it has never seen them."
+          "answer": "Documents are split into chunks so the search system can find focused, specific facts more easily."
         },
         {
           "number": 3,
-          "answer": "The Leave Policy was closest in meaning to the question, because both are about carrying leave days."
+          "answer": "An embedding is a list of numbers that represents the meaning of a piece of text."
         },
         {
           "number": 4,
-          "answer": "No. The search can find the wrong text, and the model can misread the text, so mistakes are still possible."
+          "answer": "No, RAG does not retrain the AI model; it only provides the relevant text inside the temporary prompt for that specific request."
         }
       ]
     },
     "revised_lesson": {
-      "title": "Introduction to RAG (Retrieval-Augmented Generation)",
-      "introduction": "Imagine you ask a very smart friend a question about your company's leave rules. Your friend is good at explaining things, but has never seen those rules. A good friend would first read the rules, and then answer you. RAG helps an AI model work in the same way. In this lesson, you will learn what RAG is, why people use it, and how it works step by step. You do not need any technical knowledge to follow this lesson.",
-      "what_it_means": "An AI model is a computer program that has learned patterns from a very large amount of text. It can read a question and write an answer in normal language. RAG stands for Retrieval-Augmented Generation. It is a way of helping an AI model answer questions by first finding useful information and then giving that information to the model. The name has three parts. Retrieval means finding and bringing back useful information from a collection of documents. Augmentation means adding something extra. Here, we add the information we found to the question. Generation means creating something new. Here, the AI model writes the answer. So RAG is simple: find the information, add it to the question, and then write the answer.",
-      "why_it_matters": "An AI model only knows what it learned during its training. Training stops on a certain date, so the model may not know about recent events. It also does not know private information, such as your company's rules or a school's fee list. When a model does not know something, it can still give an answer that sounds confident but is wrong. This kind of wrong answer is called a hallucination. RAG helps with these problems. The model gets the correct information at the moment you ask. This makes wrong answers less likely. It also means people can update their documents at any time without training the model again.",
+      "title": "Introduction to Retrieval-Augmented Generation (RAG)",
+      "introduction": "Artificial intelligence can write text and answer questions. However, an AI model can make mistakes or lack private company information. An AI model, also called a large language model, is a computer program trained on text to recognize patterns and generate words. This lesson introduces Retrieval-Augmented Generation, also called RAG. RAG is a method that helps AI models give better answers by searching true documents first.",
+      "what_it_means": "Retrieval-Augmented Generation, or RAG, is a three-part process for answering questions with an AI model. First, retrieval means finding relevant text from outside documents. Second, augmentation means adding that found text into the instruction given to the AI model. An instruction sent to an AI model is called a prompt. Third, generation means the AI model reads the prompt with the added text and writes the final answer in plain language.",
+      "why_it_matters": "An AI model only knows what it learned during training up to a cutoff date. It does not know private business notes or facts created after its training. Also, an AI model can create confident but false answers, which are called hallucinations. RAG helps because it supplies real documents directly to the model. This makes answers more accurate, keeps data private, and allows updates without retraining the entire AI model.",
       "important_components": [
         {
-          "name": "Documents",
-          "explanation": "These are the sources of information, such as policy files, web pages or manuals. The answer can only be as good as these documents."
+          "name": "Retrieval",
+          "explanation": "Retrieval is the search step. The system looks outside the AI model to find document pieces that match the user question."
         },
         {
-          "name": "Chunks",
-          "explanation": "A chunk is a small piece of a document. Long documents are cut into chunks so that the system can find just the part it needs."
+          "name": "Augmentation",
+          "explanation": "Augmentation is the combining step. The system takes the found document text and attaches it to the question inside a single prompt."
         },
         {
-          "name": "Embeddings",
-          "explanation": "An embedding is a list of numbers that represents the meaning of a piece of text. Text with similar meaning gets similar numbers. This lets a computer compare meaning, not just exact words."
+          "name": "Generation",
+          "explanation": "Generation is the writing step. The AI model reads the combined prompt and creates a clear answer in human language."
         },
         {
-          "name": "Vector database",
-          "explanation": "A vector database is a place that stores embeddings together with their original text. It can quickly find the stored text whose meaning is closest to a question."
+          "name": "Embedding",
+          "explanation": "An embedding is a list of numbers that represents the meaning of a piece of text. Text with similar meaning gets similar numbers so a computer can compare them."
         },
         {
-          "name": "Retriever",
-          "explanation": "The retriever is the part of the system that does the searching. It takes the question and brings back the most useful chunks."
-        },
-        {
-          "name": "AI model",
-          "explanation": "The AI model reads the question and the chunks the retriever found. Then it writes the final answer in clear language."
+          "name": "Vector Database",
+          "explanation": "A vector database is a special searchable store that holds document chunks and their numerical embeddings."
         }
       ],
       "step_by_step_process": [
         {
           "step_number": 1,
-          "title": "Prepare the documents",
-          "explanation": "Collect the documents and cut them into chunks. This happens before anyone asks a question."
+          "title": "Splitting Documents into Chunks",
+          "explanation": "Large documents are cut into smaller pieces called chunks. Small chunks help the search system find precise facts easily."
         },
         {
           "step_number": 2,
-          "title": "Store the documents",
-          "explanation": "Turn each chunk into an embedding, and save the embedding and its text in a vector database."
+          "title": "Converting Chunks to Embeddings",
+          "explanation": "Each chunk is turned into an embedding, which is a list of numbers showing its meaning. These numbers and original texts are saved in a vector database."
         },
         {
           "step_number": 3,
-          "title": "Receive the question",
-          "explanation": "A person asks a question. The system turns the question into an embedding in the same way."
+          "title": "Converting Question to Embedding",
+          "explanation": "When a user asks a question, the system converts the question into numbers using the exact same embedding model."
         },
         {
           "step_number": 4,
-          "title": "Search and retrieve",
-          "explanation": "The system compares the question's numbers with the stored numbers. It brings back the chunks with the closest meaning. This is the retrieval stage."
+          "title": "Searching for Related Chunks",
+          "explanation": "The vector database compares the question numbers with document numbers. It selects the chunks with the closest meaning in a process called semantic search."
         },
         {
           "step_number": 5,
-          "title": "Add the information to the prompt",
-          "explanation": "A prompt is the text we send to the AI model. The system puts the retrieved chunks and the question together in one prompt, with an instruction to answer using that information. This is the augmentation stage."
+          "title": "Augmenting the Prompt",
+          "explanation": "The system creates a new message called a prompt. It combines the retrieved chunk text, the user question, and an instruction to rely only on the chunk text."
         },
         {
           "step_number": 6,
-          "title": "Write the answer",
-          "explanation": "The AI model reads the prompt, uses the retrieved information, and writes the answer. This is the generation stage."
+          "title": "Generating the Answer",
+          "explanation": "The AI model reads the prompt and writes an answer. The model can also cite which source document it used."
         }
       ],
-      "real_world_analogy": "Think of a student taking an open-book exam. The student is the AI model. The library is the collection of documents. When a question comes, the student finds the right page in the book (retrieval), keeps that page open next to the question (augmentation), and writes the answer in their own words (generation). The analogy has one limit: the student understands the book, but an AI model only works with patterns in text, so it can still make mistakes.",
+      "real_world_analogy": "Imagine an open-book history exam. A student could try to answer every question using only memory. If the student forgot a fact or never learned it, they might guess wrong. RAG is like letting the student look at a specific textbook page before writing each answer. The student searches the textbook index for the right page, reads the page, and then writes the answer. However, this analogy stops being exact because a human student actually understands facts, while an AI model only predicts words based on patterns in the provided text.",
       "practical_example": {
-        "scenario": "A company has a helper chatbot for its staff. An employee wants to know how many leave days they can carry into next year.",
-        "starting_input": "How many leave days can I carry into next year?",
+        "scenario": "An employee at a store uses an AI customer support tool to answer a customer question about damaged items.",
+        "starting_input": "What is the refund policy for items that arrive damaged?",
         "source_materials": [
           {
-            "title": "Leave Policy",
-            "content": "Employees may carry a maximum of 5 unused leave days into the next calendar year."
+            "title": "Document A: Store Operating Hours",
+            "content": "Our physical store is open Monday through Friday from 9:00 AM to 5:00 PM. Weekend hours are 10:00 AM to 2:00 PM."
           },
           {
-            "title": "Travel Policy",
-            "content": "Employees must book work travel at least 7 days before the trip."
-          },
-          {
-            "title": "Office Hours",
-            "content": "The office is open from 9 AM to 6 PM, Monday to Friday."
+            "title": "Document B: Return and Refund Policy",
+            "content": "Customers can return any product within 30 days of purchase. If an item arrives damaged, the customer receives a full refund or a free replacement within 5 business days of reporting the issue."
           }
         ],
         "selected_materials": [
-          "Leave Policy"
+          "Document B: Return and Refund Policy"
         ],
-        "intermediate_step": "Use only the information below to answer the question.\nInformation: Employees may carry a maximum of 5 unused leave days into the next calendar year.\nQuestion: How many leave days can I carry into next year?",
-        "final_result": "You can carry up to 5 unused leave days into next year. This comes from the Leave Policy."
+        "intermediate_step": "Context text: Customers can return any product within 30 days of purchase. If an item arrives damaged, the customer receives a full refund or a free replacement within 5 business days of reporting the issue. User Question: What is the refund policy for items that arrive damaged? Instruction: Answer the user question using only the provided context text.",
+        "final_result": "If an item arrives damaged, you can receive a full refund or a free replacement within 5 business days of reporting the issue."
       },
       "example_walkthrough": [
         {
           "step_number": 1,
-          "action": "The employee types the question into the chatbot.",
-          "result": "The system now has the question and turns it into an embedding."
+          "action": "The system receives the user question: 'What is the refund policy for items that arrive damaged?'",
+          "result": "The question is converted into a numerical embedding so the system can search for matching content."
         },
         {
           "step_number": 2,
-          "action": "The retriever compares the question with the three stored documents.",
-          "result": "The Leave Policy is closest in meaning, because it is about carrying leave days. The Travel Policy and Office Hours are not selected."
+          "action": "The search system compares the question embedding against all documents in the database.",
+          "result": "'Document B: Return and Refund Policy' is retrieved because its meaning matches the user question, while Document A is ignored."
         },
         {
           "step_number": 3,
-          "action": "The system builds the prompt.",
-          "result": "The prompt now holds the instruction, the Leave Policy text and the question."
+          "action": "The system attaches the retrieved text from Document B to the user question and instructions into a single prompt.",
+          "result": "An augmented prompt containing the source text and question is prepared for the AI model."
         },
         {
           "step_number": 4,
-          "action": "The AI model reads the prompt and writes an answer.",
-          "result": "The model answers that the limit is 5 days, using the retrieved text instead of guessing."
-        },
-        {
-          "step_number": 5,
-          "action": "The chatbot shows the answer and names its source.",
-          "result": "The employee can see that the answer came from the Leave Policy and can check it."
+          "action": "The AI model reads the augmented prompt and generates an answer using only the attached source text.",
+          "result": "The AI model generates the final answer: 'If an item arrives damaged, you can receive a full refund or a free replacement within 5 business days of reporting the issue.'"
         }
       ],
       "terminology": [
         {
-          "term": "AI model",
-          "simple_explanation": "A computer program that has learned from a lot of text and can write answers."
+          "term": "AI Model",
+          "simple_explanation": "A computer program trained on large text datasets to recognize patterns and write words."
+        },
+        {
+          "term": "Retrieval-Augmented Generation (RAG)",
+          "simple_explanation": "A method that searches outside documents for facts and gives them to an AI model to answer a question."
         },
         {
           "term": "Retrieval",
-          "simple_explanation": "Finding and bringing back useful information."
+          "simple_explanation": "The process of searching and selecting relevant document text from a store."
         },
         {
           "term": "Augmentation",
-          "simple_explanation": "Adding the information that was found to the question."
+          "simple_explanation": "The process of putting selected text into the instruction given to an AI model."
         },
         {
           "term": "Generation",
-          "simple_explanation": "The AI model writing the answer."
-        },
-        {
-          "term": "Chunk",
-          "simple_explanation": "A small piece of a document."
-        },
-        {
-          "term": "Embedding",
-          "simple_explanation": "A list of numbers that represents the meaning of text."
-        },
-        {
-          "term": "Vector database",
-          "simple_explanation": "A store that keeps embeddings and can quickly find similar meaning."
+          "simple_explanation": "The process where an AI model writes an answer based on its prompt."
         },
         {
           "term": "Prompt",
-          "simple_explanation": "The text we send to an AI model."
+          "simple_explanation": "The input text or instruction sent to an AI model."
+        },
+        {
+          "term": "Chunk",
+          "simple_explanation": "A small piece of a larger text document."
+        },
+        {
+          "term": "Embedding",
+          "simple_explanation": "A list of numbers representing the meaning of a text segment."
+        },
+        {
+          "term": "Vector Database",
+          "simple_explanation": "A database that stores embeddings and allows fast search based on text meaning."
+        },
+        {
+          "term": "Semantic Search",
+          "simple_explanation": "A search method that finds text with similar meaning rather than just matching exact words."
         },
         {
           "term": "Hallucination",
-          "simple_explanation": "An answer from an AI model that sounds confident but is wrong."
+          "simple_explanation": "A mistake where an AI model produces confident but false information."
         }
       ],
       "common_mistakes": [
         {
-          "misconception": "RAG makes the AI model always correct.",
-          "correction": "RAG lowers the chance of wrong answers, but the model can still misunderstand the text."
+          "misconception": "RAG permanently retrains the AI model with new documents.",
+          "correction": "RAG does not retrain or permanently change the AI model. It only gives document text inside the prompt for a single question."
         },
         {
-          "misconception": "RAG teaches the model new things permanently.",
-          "correction": "The model is not trained again. It only uses the retrieved text for that one question."
+          "misconception": "RAG completely eliminates all AI mistakes.",
+          "correction": "RAG reduces false statements, but an AI model can still misread context or ignore details."
         },
         {
-          "misconception": "RAG works well with any documents.",
-          "correction": "If the documents are old, wrong or missing, the answer can also be poor. Good answers need good documents."
-        },
-        {
-          "misconception": "Search always finds the right text.",
-          "correction": "Retrieval can bring back the wrong text. When that happens, the final answer can be wrong too."
+          "misconception": "RAG always produces a good answer even if the source documents are bad.",
+          "correction": "If the source documents are wrong or the search retrieves incorrect text, the final answer will also be poor."
         }
       ],
-      "summary": "RAG helps an AI model answer using information it was not trained on. First the system stores documents in a form it can search. When a question comes, it finds the most useful text, adds that text to the prompt, and lets the model write the answer. This gives more up-to-date and more trustworthy answers, but it does not make them perfect.",
+      "summary": "Retrieval-Augmented Generation (RAG) improves AI accuracy by searching external documents before generating an answer. It breaks documents into chunks, turns them into numerical embeddings, and stores them in a vector database. When a user asks a question, semantic search finds the most relevant chunks. The system augments the prompt with these chunks. Finally, the AI model generates an accurate, source-based answer without requiring model retraining.",
       "key_takeaways": [
-        "RAG means find the information, add it to the question, then write the answer.",
-        "Retrieval finds, augmentation adds, and generation writes.",
-        "Documents are usually split into chunks and stored as embeddings so they can be searched by meaning.",
-        "RAG reduces wrong answers, but it cannot remove them completely.",
-        "The quality of the answer depends on the quality of the documents and the search."
+        "RAG stands for Retrieval-Augmented Generation.",
+        "Retrieval finds relevant document chunks using semantic search with embeddings.",
+        "Augmentation adds retrieved text directly into the prompt given to the AI model.",
+        "Generation creates the final answer using the provided text context.",
+        "RAG does not retrain the AI model, but helps prevent false facts called hallucinations."
       ],
       "knowledge_check_questions": [
         {
           "number": 1,
-          "question": "What do the three parts of the name RAG mean?"
+          "question": "What do the three words in RAG stand for?"
         },
         {
           "number": 2,
-          "question": "Why can a normal AI model not answer questions about your company's private rules?"
+          "question": "Why are long documents split into smaller pieces called chunks?"
         },
         {
           "number": 3,
-          "question": "In the leave example, why was the Leave Policy selected and not the Travel Policy?"
+          "question": "What is an embedding?"
         },
         {
           "number": 4,
-          "question": "Does RAG guarantee that every answer is correct? Why or why not?"
+          "question": "Does RAG permanently retrain the AI model with new text?"
         }
       ],
       "knowledge_check_answers": [
         {
           "number": 1,
-          "answer": "Retrieval means finding useful information. Augmentation means adding it to the question. Generation means the AI model writes the answer."
+          "answer": "RAG stands for Retrieval, Augmentation, and Generation."
         },
         {
           "number": 2,
-          "answer": "The model was not trained on those private rules, so it has never seen them."
+          "answer": "Documents are split into chunks so the search system can find focused, specific facts more easily."
         },
         {
           "number": 3,
-          "answer": "The Leave Policy was closest in meaning to the question, because both are about carrying leave days."
+          "answer": "An embedding is a list of numbers that represents the meaning of a piece of text."
         },
         {
           "number": 4,
-          "answer": "No. The search can find the wrong text, and the model can misread the text, so mistakes are still possible."
+          "answer": "No, RAG does not retrain the AI model; it only provides the relevant text inside the temporary prompt for that specific request."
         }
       ]
     },
     "revised_version": 2,
-    "created_at": "2026-11-06T19:47:34.291468Z"
+    "created_at": "2026-11-06T20:36:04.532572Z"
   }
 ]

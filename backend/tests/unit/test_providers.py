@@ -89,6 +89,41 @@ def test_provider_timeout_is_handled():
         provider.generate_structured(Lesson, "s", "u")
 
 
+@pytest.mark.parametrize(
+    "code, expected, phrase",
+    [
+        (503, ProviderError, "overloaded"),
+        (429, ProviderError, "quota"),
+        (404, ProviderError, "GENERATOR_MODEL"),
+        (400, ProviderError, "API key"),
+        (504, ProviderTimeoutError, "timed out"),
+    ],
+)
+def test_provider_status_gives_useful_advice_without_echoing_its_message(code, expected, phrase):
+    class GoogleAPIError(Exception):
+        pass
+
+    error = GoogleAPIError("response included secret-key-abc")
+    error.code = code
+    provider, _ = provider_with(error=error)
+    with pytest.raises(expected) as caught:
+        provider.generate_structured(Lesson, "s", "u")
+    assert phrase in str(caught.value)
+    assert "secret-key-abc" not in str(caught.value)
+
+
+def test_status_is_read_from_error_text_when_the_adapter_has_no_code_attribute():
+    class GoogleRateLimitError(Exception):
+        pass
+
+    error = GoogleRateLimitError("Error calling model (RESOURCE_EXHAUSTED): 429 RESOURCE_EXHAUSTED. Quota secret-detail")
+    provider, _ = provider_with(error=error)
+    with pytest.raises(ProviderError) as caught:
+        provider.generate_structured(Lesson, "s", "u")
+    assert "quota" in str(caught.value)
+    assert "secret-detail" not in str(caught.value)
+
+
 def anthropic_payload(config: Settings) -> dict:
     model = build_chat_model("anthropic", config.model_for("generator"), config)
     bound = model.with_structured_output(Lesson, method="json_schema", include_raw=True)
@@ -155,7 +190,7 @@ def test_gemini_is_the_default_provider_with_no_silent_fallback_to_mock(monkeypa
         monkeypatch.delenv(name, raising=False)
     config = Settings(_env_file=None)
     assert config.llm_provider == "gemini"
-    assert config.model_for("generator") == config.model_for("evaluator") == "gemini-3.8-flash"
+    assert config.model_for("generator") == config.model_for("evaluator") == "gemini-3.6-flash"
     with pytest.raises(ConfigurationError, match="API key is required for the 'gemini'"):
         config.validate_runtime()
     with pytest.raises(ConfigurationError):

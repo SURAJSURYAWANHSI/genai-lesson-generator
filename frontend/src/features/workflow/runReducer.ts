@@ -1,3 +1,5 @@
+import { sectionLabel } from '@/lib/format'
+import { criterionList } from '@/lib/rubric'
 import type { GenerateLessonRequest, GenerateLessonResponse, RunStatus, StageEvent, StreamEvent } from '@/lib/types'
 
 export type StepStatus = 'pending' | 'running' | 'done' | 'failed' | 'skipped'
@@ -16,49 +18,35 @@ export interface AttemptTrace {
   sectionsToRevise: string[]
 }
 
-export interface LogEntry {
-  at: number
-  node: string
-  event: 'start' | 'complete'
-  attempt: number
-}
-
-export type RunPhase = 'idle' | 'connecting' | 'streaming' | 'finished' | 'failed' | 'stopped'
+export type RunPhase = 'idle' | 'connecting' | 'streaming' | 'finished' | 'failed'
 
 export interface RunStreamState {
   phase: RunPhase
-  request: GenerateLessonRequest | null
   runId: string | null
   maxAttempts: number | null
-  startedAt: number | null
-  memory: { status: StepStatus; used: boolean; guidance: string[] }
+  memory: { status: StepStatus; used: boolean }
   attempts: AttemptTrace[]
   finalization: { status: StepStatus; finalStatus: RunStatus | null }
   result: GenerateLessonResponse | null
   error: string | null
-  log: LogEntry[]
 }
 
 export const initialRunState: RunStreamState = {
   phase: 'idle',
-  request: null,
   runId: null,
   maxAttempts: null,
-  startedAt: null,
-  memory: { status: 'pending', used: false, guidance: [] },
+  memory: { status: 'pending', used: false },
   attempts: [],
   finalization: { status: 'pending', finalStatus: null },
   result: null,
   error: null,
-  log: [],
 }
 
 export type RunAction =
-  | { type: 'begin'; request: GenerateLessonRequest; at: number }
-  | { type: 'event'; event: StreamEvent; at: number }
+  | { type: 'begin'; request: GenerateLessonRequest }
+  | { type: 'event'; event: StreamEvent }
   | { type: 'refused'; message: string }
   | { type: 'disconnected'; message: string }
-  | { type: 'stopped' }
   | { type: 'reset' }
 
 function newAttempt(number: number): AttemptTrace {
@@ -87,9 +75,7 @@ function applyStage(state: RunStreamState, stage: StageEvent): RunStreamState {
     case 'load_memory':
       return {
         ...state,
-        memory: starting
-          ? { ...state.memory, status: 'running' }
-          : { status: 'done', used: stage.memory_used ?? false, guidance: stage.guidance ?? [] },
+        memory: starting ? { ...state.memory, status: 'running' } : { status: 'done', used: stage.memory_used ?? false },
       }
     case 'generate_lesson':
       // A start event carries the attempt that just ended, so the new attempt is counted here.
@@ -178,13 +164,11 @@ function closeRunningSteps(state: RunStreamState): RunStreamState {
 export function runReducer(state: RunStreamState, action: RunAction): RunStreamState {
   switch (action.type) {
     case 'begin':
-      return { ...initialRunState, phase: 'connecting', request: action.request, startedAt: action.at }
+      return { ...initialRunState, phase: 'connecting' }
     case 'refused':
       return { ...state, phase: 'failed', error: action.message }
     case 'disconnected':
       return { ...closeRunningSteps(state), phase: 'failed', error: action.message }
-    case 'stopped':
-      return { ...closeRunningSteps(state), phase: 'stopped' }
     case 'reset':
       return initialRunState
     case 'event': {
@@ -192,15 +176,7 @@ export function runReducer(state: RunStreamState, action: RunAction): RunStreamS
       if (event.type === 'started') {
         return { ...state, phase: 'streaming', runId: event.run_id, maxAttempts: event.maximum_attempts }
       }
-      if (event.type === 'stage') {
-        const entry: LogEntry = {
-          at: action.at,
-          node: event.stage.node,
-          event: event.stage.event,
-          attempt: event.stage.attempt,
-        }
-        return { ...applyStage(state, event.stage), log: [...state.log, entry] }
-      }
+      if (event.type === 'stage') return applyStage(state, event.stage)
       if (event.type === 'complete') {
         return { ...closeRunningSteps(state), phase: 'finished', result: event.result, runId: event.result.run_id }
       }
@@ -209,38 +185,45 @@ export function runReducer(state: RunStreamState, action: RunAction): RunStreamS
   }
 }
 
-export interface StageSummary {
-  name: string
-  status: StepStatus
-  detail: string
-}
-
 const STATUS_WORD: Record<StepStatus, string> = {
   pending: 'Waiting',
-  running: 'Running',
+  running: 'Working',
   done: 'Done',
   failed: 'Failed',
-  skipped: 'Not needed',
+  skipped: 'Skipped',
 }
 
 export function statusWord(status: StepStatus): string {
   return STATUS_WORD[status]
 }
 
-/** Collapses the attempts into the six stages named in the brief, showing the latest attempt. */
+export interface StageSummary {
+  name: string
+  status: StepStatus
+  /** Plain sentences about what happened, one per attempt where a stage repeats. */
+  notes: string[]
+}
+
+function attemptWords(number: number, maxAttempts: number | null): string {
+  return maxAttempts === null ? `Attempt ${number}` : `Attempt ${number} of ${maxAttempts}`
+}
+
+const VERDICT_WORDS = {
+  pass: 'publish the lesson.',
+  retry: 'rewrite and try again.',
+  exhausted: 'no attempts left.',
+}
+
+/** The six required stages. Where a stage repeats, its status is the latest attempt's. */
 export function summariseStages(state: RunStreamState): StageSummary[] {
-  const { attempts, memory, finalization, phase } = state
-  const over = phase === 'finished' || phase === 'failed' || phase === 'stopped'
+  const { attempts, memory, finalization, phase, maxAttempts } = state
+  const over = phase === 'finished' || phase === 'failed'
   const first = attempts[0]
   const latest = attempts[attempts.length - 1]
   const revisions = attempts.slice(1)
-
-  const evaluationDetail = () => {
-    if (!latest || latest.failedCriteria === null) return latest?.evaluationError ? 'Evaluator failed' : ''
-    return latest.failedCriteria.length
-      ? `Attempt ${latest.number} failed ${latest.failedCriteria.join(', ')}`
-      : `Attempt ${latest.number} passed all 10`
-  }
+  const label = (attempt: AttemptTrace) => attemptWords(attempt.number, maxAttempts)
+  // Once a run is over, nothing is still waiting: a stage it never reached was skipped.
+  const settled = (status: StepStatus): StepStatus => (over && status === 'pending' ? 'skipped' : status)
 
   const regeneration: StepStatus = revisions.some((attempt) => attempt.generation === 'running')
     ? 'running'
@@ -248,43 +231,78 @@ export function summariseStages(state: RunStreamState): StageSummary[] {
       ? 'failed'
       : revisions.length > 0
         ? 'done'
-        : phase === 'finished'
-          ? 'skipped'
-          : 'pending'
+        : 'pending'
 
-  const verdictDetail = {
-    pass: 'Publish the lesson',
-    retry: `Retry with feedback`,
-    exhausted: 'No retries left',
-  }
-
-  return [
+  const stages: StageSummary[] = [
     {
       name: 'Memory retrieval',
       status: memory.status,
-      detail:
-        memory.status !== 'done'
-          ? ''
-          : memory.used
-            ? `${memory.guidance.length} guidance item${memory.guidance.length === 1 ? '' : 's'}`
-            : 'No earlier guidance',
+      notes: memory.status !== 'done' ? [] : [memory.used ? 'Used lessons learned from earlier runs.' : 'Nothing learned from earlier runs yet.'],
     },
     {
       name: 'Lesson generation',
       status: first?.generation ?? 'pending',
-      detail: first?.injected ? 'Demo defect injected' : '',
+      notes: [
+        ...(first?.generationError ? [first.generationError] : []),
+        ...(first?.injected ? ['A mistake was planted on purpose for this demo.'] : []),
+      ],
     },
-    { name: 'Evaluation', status: latest?.evaluation ?? 'pending', detail: evaluationDetail() },
+    {
+      name: 'Evaluation',
+      status: latest?.evaluation ?? 'pending',
+      notes: attempts.flatMap((attempt) => {
+        if (attempt.evaluationError) return [`${label(attempt)}: ${attempt.evaluationError}`]
+        if (!attempt.failedCriteria) return []
+        return [
+          attempt.failedCriteria.length
+            ? `${label(attempt)}: found a problem with ${criterionList(attempt.failedCriteria)}.`
+            : `${label(attempt)}: passed all 10 checks.`,
+        ]
+      }),
+    },
     {
       name: 'Retry decision',
       status: latest?.decision ?? 'pending',
-      detail: latest?.verdict ? verdictDetail[latest.verdict] : '',
+      notes: attempts.flatMap((attempt) => (attempt.verdict ? [`${label(attempt)}: ${VERDICT_WORDS[attempt.verdict]}`] : [])),
     },
     {
       name: 'Regeneration',
-      status: over && regeneration === 'pending' ? 'skipped' : regeneration,
-      detail: revisions.length ? `${revisions.length} revision${revisions.length === 1 ? '' : 's'}` : '',
+      status: regeneration,
+      notes: revisions.flatMap((attempt, index) => [
+        ...(attempt.generationError ? [attempt.generationError] : []),
+        ...(attempts[index].sectionsToRevise.length
+          ? [
+              `${label(attempt)}: ${attempt.generation === 'done' ? 'rewrote' : 'rewriting'} ${attempts[index].sectionsToRevise.map(sectionLabel).join(' and ')}.`,
+            ]
+          : []),
+      ]),
     },
-    { name: 'Finalization', status: finalization.status, detail: finalization.finalStatus ?? '' },
+    {
+      name: 'Finalization',
+      status: finalization.status,
+      notes: !finalization.finalStatus ? [] : [finalization.finalStatus === 'PASS' ? 'Lesson published.' : 'Lesson not published.'],
+    },
   ]
+  return stages.map((stage) => ({ ...stage, status: settled(stage.status) }))
+}
+
+/** One plain sentence saying what is happening right now. */
+export function currentSentence(state: RunStreamState): string {
+  const { attempts, memory, finalization, maxAttempts } = state
+  if (finalization.status === 'running') return 'Finishing up...'
+  if (attempts.length === 0) {
+    return memory.status === 'running' ? 'Looking up what was learned from earlier lessons...' : 'Getting started...'
+  }
+  const latest = attempts[attempts.length - 1]
+  const previous = attempts[attempts.length - 2]
+  const attempt = attemptWords(latest.number, maxAttempts)
+  if (latest.generation === 'running') {
+    if (!previous?.failedCriteria?.length) return 'Writing the lesson...'
+    return `Found a problem with ${criterionList(previous.failedCriteria)}. Fixing it (${attempt})...`
+  }
+  if (latest.failedCriteria === null) {
+    return latest.number === 1 ? 'Checking the lesson...' : `Checking the lesson again (${attempt})...`
+  }
+  if (latest.failedCriteria.length) return `Found a problem with ${criterionList(latest.failedCriteria)}...`
+  return 'The lesson passed all 10 checks...'
 }

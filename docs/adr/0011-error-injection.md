@@ -11,7 +11,7 @@ An evaluator that has only ever seen good lessons hasn't been shown to catch bad
 
 The defect is applied by code to the lesson the generator returned, before evaluation, on attempt 1 only. The generator doesn't know about it, and a real model can't "accidentally" avoid it.
 
-Six types are supported, each with its expected criterion. The record stored on the run holds the type, the before and after content, the evaluator's result per attempt, and whether the defect was `detected` and `corrected`. An optional `persistent_error` re-injects on every attempt to demonstrate retry exhaustion.
+Six types are supported, each with its expected criterion. The record stored on the run holds the type, the before and after content, the evaluator's result per attempt, and whether the defect was `detected` and `corrected`. An optional API field, `persistent_error`, re-injects on every attempt to demonstrate exhausting all retries. In the dashboard, a retry limit of 0 with an error type shows a rejection.
 
 Controls: `error_injection` requires `demo_mode` (422), and production returns 403 before any work starts. If the evaluator passes an injected lesson, the run ends in `ERROR` and is not published.
 

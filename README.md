@@ -24,6 +24,8 @@ npm install
 npm run dev                          # http://localhost:5173
 ```
 
+On Windows PowerShell, if scripts are blocked, use `npm.cmd install` and `npm.cmd run dev`.
+
 ## 1. Project overview
 
 Given a topic and learner profile, the system:
@@ -167,8 +169,8 @@ Copy `.env.example` to `.env`. Only the key is required:
 ```ini
 LLM_PROVIDER=gemini
 GOOGLE_API_KEY=your-key          # GEMINI_API_KEY also works
-GENERATOR_MODEL=gemini-3.8-flash
-EVALUATOR_MODEL=gemini-3.8-flash
+GENERATOR_MODEL=gemini-3.6-flash
+EVALUATOR_MODEL=gemini-3.6-flash
 ```
 
 **To change something later,** edit `.env` and restart the backend. No code changes:
@@ -359,9 +361,12 @@ The reasoning and trade-offs are in [docs/design-decisions.md](docs/design-decis
 | Area | Status |
 |---|---|
 | Workflow, memory, evolution, API | Covered by automated tests, plus checks against real server processes |
-| Live Gemini lesson generation and evaluation | See the [latest session log](docs/sessions/README.md) for current status |
+| Live Gemini generation and evaluation | Run through the API: the 12-step demo passed, and the evaluator caught all three injected errors that only a model can detect. See [the results](outputs/demo/live_evaluator_checks.md). A small sample, not a measure of accuracy |
+| Dashboard | Build and browser checks used the mock provider, with real-provider screens simulated. Not yet checked in a browser against live Gemini |
 | OpenAI and Claude adapters | Tested offline only; never run against live APIs |
 | Docker Compose and PostgreSQL | Written but not run, because the Docker daemon wasn't available |
+
+**Gemini free tier:** on 2026-11-07 the free tier's error reported a limit of 20 requests per day per model. A normal run uses at least 2 requests and the assessment demo normally 4, so that is about five demos a day at best. Separately named models don't always give a fresh allowance: `gemini-3.5-flash` hit the limit after very few direct calls once `gemini-3.6-flash` was used up, while the lite models kept working. When a limit is reached, runs end in `ERROR` with a clear message. Results from a real run are saved in `outputs/demo/`. Models can also be overloaded: `gemini-3.8-flash` returned repeated 503 and 504 errors that day.
 
 **By design:**
 

@@ -21,67 +21,58 @@
   --color-ring: var(--ring);
 
   --color-pass: var(--pass);
-  --color-pass-soft: var(--pass-soft);
   --color-fail: var(--fail);
   --color-fail-soft: var(--fail-soft);
-  --color-fail-contrast: var(--fail-contrast);
   --color-caution: var(--caution);
   --color-caution-soft: var(--caution-soft);
 
-  --radius-sm: 3px;
-  --radius-md: 5px;
-  --radius-lg: 7px;
+  --radius-sm: 4px;
+  --radius-md: 6px;
+  --radius-lg: 8px;
 
-  /* System fonts only, so nothing loads from a remote origin. The dashboard speaks in a humanist
-     sans; the lesson under review is set in a reading serif, so the artefact and the machine
-     judging it never look alike. */
+  /* One system font family, so nothing loads from a remote origin. */
   --font-sans: "Segoe UI Variable Text", "Segoe UI", -apple-system, BlinkMacSystemFont, "Helvetica Neue", Roboto, system-ui, sans-serif;
-  --font-serif: Charter, "Iowan Old Style", "Palatino Linotype", Cambria, Georgia, serif;
-  --font-mono: "Cascadia Code", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 :root {
   color-scheme: light dark;
-  --background: #f1f3f8;
-  --foreground: #172036;
+  --background: #fbfbfd;
+  --foreground: #1b2233;
   --card: #ffffff;
-  --muted: #e6e9f1;
-  --muted-foreground: #525c75;
-  --border: #d3d8e4;
-  --input: #8d96ad;
+  --muted: #eef0f5;
+  --muted-foreground: #565f75;
+  --border: #e0e3eb;
+  --input: #a3aabc;
   --primary: #2a3cb5;
   --primary-foreground: #ffffff;
   --ring: #2a3cb5;
 
+  /* Green and red are reserved for pass and fail. Amber only marks mock and demo mode. */
   --pass: #0a6b52;
-  --pass-soft: #dcf2ea;
   --fail: #b01e3a;
-  --fail-soft: #fae3e7;
-  --fail-contrast: #ffffff;
-  --caution: #7c5100;
-  --caution-soft: #fbedcc;
+  --fail-soft: #fbeaed;
+  --caution: #6b4600;
+  --caution-soft: #fbf0d6;
 }
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --background: #121829;
-    --foreground: #e7ebf5;
-    --card: #1a2238;
-    --muted: #242d47;
-    --muted-foreground: #a4afc6;
-    --border: #323c58;
+    --background: #141a2a;
+    --foreground: #e9ecf4;
+    --card: #1b2336;
+    --muted: #262f47;
+    --muted-foreground: #a7b1c7;
+    --border: #2f3952;
     --input: #5d6887;
     --primary: #a3afff;
-    --primary-foreground: #121829;
+    --primary-foreground: #141a2a;
     --ring: #a3afff;
 
     --pass: #62d6b3;
-    --pass-soft: #12352f;
     --fail: #ff8d9f;
-    --fail-soft: #421b2a;
-    --fail-contrast: #2a0d15;
+    --fail-soft: #3a1b27;
     --caution: #f1c871;
-    --caution-soft: #3a2d10;
+    --caution-soft: #33290f;
   }
 }
 
@@ -106,12 +97,10 @@
 }
 
 @layer components {
-  /* Markdown from the lesson. Nothing here applies to the dashboard around it. */
+  /* Markdown from the lesson. */
   .prose-lesson {
-    font-family: var(--font-serif);
     font-size: 1.0625rem;
-    line-height: 1.7;
-    max-width: 68ch;
+    line-height: 1.75;
   }
   .prose-lesson > * + * {
     margin-top: 0.75em;
@@ -128,17 +117,15 @@
     color: var(--primary);
     text-decoration: underline;
   }
-  .prose-lesson code {
-    font-family: var(--font-mono);
-    font-size: 0.875em;
+  .prose-lesson code,
+  .prose-lesson pre {
+    font-family: inherit;
     background: var(--muted);
-    border-radius: 3px;
+    border-radius: 4px;
     padding: 0.1em 0.3em;
   }
   .prose-lesson pre {
     overflow-x: auto;
-    background: var(--muted);
-    border-radius: 5px;
     padding: 0.75em 1em;
   }
   .prose-lesson pre code {
@@ -154,11 +141,6 @@
   .prose-lesson h4,
   .prose-lesson h5 {
     font-weight: 600;
-  }
-
-  /* Diagonal hazard edge: reserved for demo/test mode so it can't be confused with anything else. */
-  .demo-hazard {
-    background-image: repeating-linear-gradient(-45deg, var(--caution) 0 8px, transparent 8px 16px);
   }
 
   /* Disclosure marker shared by every expandable block. */

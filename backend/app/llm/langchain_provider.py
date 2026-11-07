@@ -5,6 +5,7 @@ default is a forced tool call, which current Claude models reject with a 400.
 """
 
 import logging
+import re
 from typing import Any, TypeVar
 
 from langchain_core.exceptions import OutputParserException
@@ -58,8 +59,38 @@ def build_chat_model(provider: ProviderName, model: str, settings: Settings) -> 
     raise ProviderError(f"Unsupported provider '{provider}'.")
 
 
+# What each provider status means for the person running the system. Provider messages are
+# never passed on, because they can echo request details.
+_STATUS_ADVICE: dict[int, str] = {
+    400: "rejected the request. Check the API key and model name in .env.",
+    401: "rejected the API key. Check the key in .env.",
+    403: "refused access. Check that the API key in .env can use this model.",
+    404: "could not find this model. Check GENERATOR_MODEL and EVALUATOR_MODEL in .env.",
+    429: "reported that a rate limit or quota is used up. Free-tier limits can be daily and per model, so wait, or choose another model in .env.",
+    500: "had an internal error. Try again shortly.",
+    503: "is overloaded right now. Try again shortly, or choose another model in .env.",
+}
+
+
+_STATUS_IN_TEXT = re.compile(r"\b([45]\d\d) [A-Z_]{4,}\b")
+
+
+def _status_code(error: Exception) -> int | None:
+    for attribute in ("code", "status_code"):
+        value = getattr(error, attribute, None)
+        if isinstance(value, int):
+            return value
+    # Some adapter errors carry the status only in their text, such as "429 RESOURCE_EXHAUSTED".
+    match = _STATUS_IN_TEXT.search(str(error))
+    return int(match.group(1)) if match else None
+
+
 def _is_timeout(error: Exception) -> bool:
-    return isinstance(error, TimeoutError) or "timeout" in type(error).__name__.lower()
+    return (
+        isinstance(error, TimeoutError)
+        or "timeout" in type(error).__name__.lower()
+        or _status_code(error) in (408, 504)
+    )
 
 
 class LangChainProvider(LLMProvider):
@@ -88,9 +119,17 @@ class LangChainProvider(LLMProvider):
         except Exception as error:
             # The class name is enough to diagnose. Provider messages can echo request details.
             kind = type(error).__name__
-            logger.error("llm_provider_error", extra={"provider": self.provider_name, "error_type": kind})
+            status = _status_code(error)
+            logger.error(
+                "llm_provider_error",
+                extra={"provider": self.provider_name, "error_type": kind, "status": status},
+            )
             if _is_timeout(error):
-                raise ProviderTimeoutError(f"The {self.provider_name} provider timed out.") from error
+                raise ProviderTimeoutError(
+                    f"The {self.provider_name} provider timed out. Try again shortly, or choose another model in .env."
+                ) from error
+            if status in _STATUS_ADVICE:
+                raise ProviderError(f"The {self.provider_name} provider {_STATUS_ADVICE[status]}") from error
             raise ProviderError(f"The {self.provider_name} provider request failed ({kind}).") from error
 
         raw = output.get("raw")

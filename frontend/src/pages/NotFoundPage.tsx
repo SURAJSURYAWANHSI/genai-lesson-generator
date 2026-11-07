@@ -7,12 +7,12 @@ export function NotFoundPage() {
     <EmptyState
       title="This page doesn't exist"
       action={
-        <Button asChild variant="outline">
+        <Button asChild>
           <Link to="/">Go to the dashboard</Link>
         </Button>
       }
     >
-      Check the address, or go back to the dashboard.
+      The address may be mistyped.
     </EmptyState>
   )
 }

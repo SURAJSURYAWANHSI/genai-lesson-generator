@@ -1,30 +1,45 @@
-import type { Lesson, LessonSection } from './types'
+import { CRITERIA, criterionLabel } from './rubric'
+import type { Lesson, LessonSection, RunStatus } from './types'
 
-const dateFormat = new Intl.DateTimeFormat(undefined, { dateStyle: 'medium', timeStyle: 'short' })
+const dateFormat = new Intl.DateTimeFormat('en-GB', {
+  day: 'numeric',
+  month: 'short',
+  year: 'numeric',
+  hour: 'numeric',
+  minute: '2-digit',
+  hour12: true,
+})
 
-export function formatDate(value: string | null): string {
-  return value ? dateFormat.format(new Date(value)) : 'Not finished'
+/** "7 Nov 2026, 1:17 AM" */
+export function formatDate(value: string): string {
+  return dateFormat.format(new Date(value)).replace(/\b(am|pm)\b/, (part) => part.toUpperCase())
 }
 
-/** A null cost means no pricing is configured for the model, which is not the same as free. */
-export function formatCost(value: number | null): string {
-  if (value === null) return 'not configured'
-  return `$${value.toFixed(value !== 0 && value < 0.01 ? 4 : 2)}`
+export function pluralise(count: number, word: string): string {
+  return `${count} ${word}${count === 1 ? '' : 's'}`
 }
 
-export function formatPercent(value: number): string {
-  return `${Math.round(value * 100)}%`
+export const STATUS_WORDS: Record<RunStatus, string> = {
+  PASS: 'Passed',
+  REJECTED: 'Rejected',
+  ERROR: 'Stopped with an error',
+  RUNNING: 'Still running',
 }
 
-export function formatNumber(value: number): string {
-  return value.toLocaleString()
+/** The run's outcome as a sentence, such as "Passed after 2 attempts". */
+export function outcomeSentence(status: RunStatus, attempts: number): string {
+  if (status === 'ERROR' || status === 'RUNNING') return STATUS_WORDS[status]
+  return `${STATUS_WORDS[status]} after ${pluralise(attempts, 'attempt')}`
 }
 
 export function topicLabel(topicKey: string): string {
-  return topicKey === '*' ? 'All topics' : topicKey
+  if (topicKey === '*') return 'All topics'
+  if (topicKey === 'rag') return 'RAG'
+  const words = topicKey.replace(/-/g, ' ')
+  return words.charAt(0).toUpperCase() + words.slice(1)
 }
 
-export const SECTION_LABELS: Record<LessonSection, string> = {
+const SECTION_LABELS: Record<LessonSection, string> = {
   title: 'Title',
   introduction: 'Introduction',
   what_it_means: 'What it means',
@@ -45,9 +60,36 @@ export const SECTION_LABELS: Record<LessonSection, string> = {
 export const LESSON_SECTIONS = Object.keys(SECTION_LABELS) as LessonSection[]
 
 export function sectionLabel(section: string): string {
-  return SECTION_LABELS[section as LessonSection] ?? section
+  return SECTION_LABELS[section as LessonSection] ?? section.replace(/_/g, ' ')
 }
 
 export function changedSections(before: Lesson, after: Lesson): LessonSection[] {
   return LESSON_SECTIONS.filter((name) => JSON.stringify(before[name]) !== JSON.stringify(after[name]))
+}
+
+const OUTCOME_PHRASES: [RegExp, string][] = [
+  [/with status PASS/g, 'as Passed'],
+  [/with status REJECTED/g, 'as Rejected'],
+  [/with status ERROR/g, 'with an error'],
+  [/generation\(s\)/g, 'attempt(s)'],
+  [/'rag'/g, 'RAG'],
+  [/Deterministic validator:/g, 'Automatic check:'],
+  [/Model evidence: \[Mock rule-based check\]/g, 'Mock check:'],
+  [/Model evidence:/g, 'Model check:'],
+  [/\[Mock rule-based check\]/g, 'Mock check:'],
+]
+
+/**
+ * Backend text is written for logs and can name internals, such as 'example_walkthrough' or a bare
+ * Q07. This turns those into the words used everywhere else in the UI.
+ */
+export function plainText(text: string): string {
+  let result = text.replace(/'?\b[a-z]+(?:_[a-z]+)+\b'?/g, (match) => sectionLabel(match.replace(/'/g, '')))
+  // The lookbehind leaves an already formatted "Practical Example (Q07)" alone.
+  result = result.replace(/(?<!\()\b(Q(?:0[1-9]|10))\b( [A-Z][a-z]+(?: [A-Z][a-z]+)*)?/g, (_, id: string, suffix?: string) => {
+    const name = CRITERIA.find((item) => item.id === id)?.name
+    return criterionLabel(id) + (suffix && suffix.trim() !== name ? suffix : '')
+  })
+  for (const [pattern, phrase] of OUTCOME_PHRASES) result = result.replace(pattern, phrase)
+  return result
 }

@@ -1,3 +1,4 @@
+import type { ReactNode } from 'react'
 import { CircleCheck, CircleSlash, TriangleAlert } from 'lucide-react'
 import { LESSON_SECTIONS, sectionLabel } from '@/lib/format'
 import { isRagTopic } from '@/lib/constants'
@@ -6,17 +7,17 @@ import { Markdown } from './Markdown'
 
 function EmptySection() {
   return (
-    <p className="flex items-center gap-2 rounded-md border border-dashed border-fail px-3 py-2 text-sm text-fail">
+    <p className="flex items-center gap-2 text-fail">
       <TriangleAlert className="size-4 shrink-0" aria-hidden />
-      This section is empty in this version.
+      This section is empty.
     </p>
   )
 }
 
-function ExampleField({ label, children }: { label: string; children: React.ReactNode }) {
+function ExampleField({ label, children }: { label: string; children: ReactNode }) {
   return (
     <div>
-      <h4 className="mb-1 text-sm font-semibold">{label}</h4>
+      <h4 className="mb-1 font-semibold">{label}</h4>
       {children}
     </div>
   )
@@ -30,7 +31,7 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
   const missing = (
     <p className="text-sm text-fail">
       <TriangleAlert className="mr-1 inline size-4" aria-hidden />
-      Missing in this version.
+      Missing.
     </p>
   )
   return (
@@ -43,13 +44,13 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
         {example.source_materials.length === 0 ? (
           missing
         ) : (
-          <ul className="grid gap-2 md:grid-cols-2">
+          <ul className="space-y-2">
             {example.source_materials.map((material) => {
               const selected = example.selected_materials.includes(material.title)
               return (
                 <li
                   key={material.title}
-                  className={`rounded-md border p-3 ${selected ? 'border-2 border-primary' : ''}`}
+                  className={`rounded-md border p-3 ${selected ? 'border-primary' : ''}`}
                 >
                   <p className="mb-1 flex flex-wrap items-center justify-between gap-2 text-sm font-semibold">
                     {material.title}
@@ -73,9 +74,9 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
       </ExampleField>
       <ExampleField label={labels.step}>
         {example.intermediate_step ? (
-          <pre className="overflow-x-auto rounded-md bg-muted p-3 font-mono text-sm whitespace-pre-wrap">
+          <p className="rounded-md bg-muted px-4 py-3 whitespace-pre-wrap">
             {example.intermediate_step}
-          </pre>
+          </p>
         ) : (
           missing
         )}
@@ -90,7 +91,7 @@ function PracticalExampleBody({ example, rag }: { example: PracticalExample; rag
 export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section: LessonSection; rag: boolean }) {
   switch (section) {
     case 'title':
-      return lesson.title ? <p className="font-serif text-xl font-semibold">{lesson.title}</p> : <EmptySection />
+      return lesson.title ? <p className="text-2xl font-semibold tracking-tight">{lesson.title}</p> : <EmptySection />
     case 'introduction':
     case 'what_it_means':
     case 'why_it_matters':
@@ -209,20 +210,21 @@ export function SectionBody({ lesson, section, rag }: { lesson: Lesson; section:
   }
 }
 
-/** All 15 sections in teaching order. The title is the first, as the backend counts it. */
-export function LessonSections({ lesson, topic, idPrefix }: { lesson: Lesson; topic: string; idPrefix: string }) {
+/** All 15 sections in teaching order. The title reads as the lesson's heading, not a labelled section. */
+export function LessonSections({ lesson, topic }: { lesson: Lesson; topic: string }) {
   const rag = isRagTopic(topic)
   return (
-    <div className="space-y-8">
-      {LESSON_SECTIONS.map((section, index) => (
-        <section key={section} id={`${idPrefix}-${section}`} className="scroll-mt-4">
-          <h3 className="mb-2 flex items-baseline gap-2 border-b pb-1.5 text-base font-semibold">
-            <span className="text-sm font-normal text-muted-foreground tabular-nums">{index + 1}</span>
-            {sectionLabel(section)}
-          </h3>
-          <SectionBody lesson={lesson} section={section} rag={rag} />
-        </section>
-      ))}
+    <div className="space-y-10">
+      {LESSON_SECTIONS.map((section) =>
+        section === 'title' ? (
+          <SectionBody key={section} lesson={lesson} section={section} rag={rag} />
+        ) : (
+          <section key={section}>
+            <h3 className="mb-3 text-xl font-semibold tracking-tight">{sectionLabel(section)}</h3>
+            <SectionBody lesson={lesson} section={section} rag={rag} />
+          </section>
+        ),
+      )}
     </div>
   )
 }

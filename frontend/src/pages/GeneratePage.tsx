@@ -1,31 +1,30 @@
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 import { PageHeader } from '@/components/PageHeader'
 import { GenerateForm } from '@/features/generate/GenerateForm'
 import { useRunStream } from '@/features/workflow/runStreamContext'
 import { WorkflowPanel } from '@/features/workflow/WorkflowPanel'
 
 export function GeneratePage() {
-  const { state } = useRunStream()
-  const panel = useRef<HTMLDivElement>(null)
-  const connecting = state.phase === 'connecting'
+  const { state, reset } = useRunStream()
+  const running = state.phase !== 'idle' && !(state.phase === 'failed' && state.runId === null)
 
-  // On a phone the panel sits under a long form, so bring it into view when a run starts.
+  // A finished run is in History, so coming back here always starts from a fresh form.
+  useEffect(() => reset, [reset])
+
   useEffect(() => {
-    if (connecting && window.matchMedia('(max-width: 1023px)').matches) {
-      panel.current?.scrollIntoView({ block: 'start' })
-    }
-  }, [connecting])
+    if (running) window.scrollTo(0, 0)
+  }, [running])
 
   return (
-    <div className="space-y-6">
-      <PageHeader title="Generate a lesson">
-        The lesson is written, checked against the rubric, and sent back with feedback if any criterion fails.
-      </PageHeader>
-      <div className="grid items-start gap-8 lg:grid-cols-[minmax(20rem,24rem)_minmax(0,1fr)]">
+    <div className="mx-auto max-w-2xl space-y-8">
+      {running ? (
+        <WorkflowPanel />
+      ) : (
+        <PageHeader title="Generate a lesson">The defaults are ready to go. Change anything you like.</PageHeader>
+      )}
+      {/* Stays mounted during a run, so "Generate another lesson" returns to the same entries. */}
+      <div hidden={running}>
         <GenerateForm />
-        <div ref={panel} className="scroll-mt-4">
-          <WorkflowPanel />
-        </div>
       </div>
     </div>
   )
